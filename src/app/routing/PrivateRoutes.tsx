@@ -7,7 +7,6 @@ import {MenuTestPage} from '../pages/MenuTestPage'
 import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
 import {WithChildren} from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
-import AddArrivagePage from '../modules/arrivage/creationArrivage/Arrivage'
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -32,22 +31,6 @@ const PrivateRoutes = () => {
             </SuspensedView>
           }
         />
-        <Route
-          path='new_arrivage'
-          element={
-            <SuspensedView>
-              <AddArrivagePage />
-            </SuspensedView>
-          }
-        />
-        {/* <Route
-          path='list_arrivage'
-          element={
-            <SuspensedView>
-              <ListArrivagePage />
-            </SuspensedView>
-          }
-        /> */}
         <Route path='menu-test' element={<MenuTestPage />} />
         {/* Lazy Modules */}
         <Route
