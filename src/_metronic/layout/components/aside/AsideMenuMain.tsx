@@ -12,49 +12,56 @@ export function AsideMenuMain({ isCollapsed = false }: AsideMenuMainProps) {
 
   return (
     <>
-      <AsideMenuItem
+      {/* <AsideMenuItem
         to="/dashboard"
         icon="element-11"
         title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
       />
-      <AsideMenuItem to="/builder" icon="switch" title="Layout Builder" />
+      <AsideMenuItem to="/builder" icon="switch" title="Layout Builder" /> */}
       <AsideMenuItemWithSub
         to="#"
         icon="shield-tick"
-        title="Gestion d'arrivage"
+        title="Gestion des référentiels "
         isCollapsed={isCollapsed}
       >
-        <AsideMenuItem
-          to="/new_arrivage"
-          icon="plus"
-          title="Création d'arrivage"
+        <AsideMenuItemWithSub
+          to="#"
+          icon="shield-tick"
+          title="Gestion des Fournisseurs"
           isCollapsed={isCollapsed}
-        />
-        <AsideMenuItem
-          to="/ListArrivages"
-          icon="list"
-          title="Liste des arrivages"
+        >
+          <AsideMenuItem
+            to="#"
+            icon="plus"
+            title="Création d'un pays"
+            isCollapsed={isCollapsed}
+          />
+          <AsideMenuItem
+            to="#"
+            icon="list"
+            title="Liste des fournisseurs"
+            isCollapsed={isCollapsed}
+          />
+        </AsideMenuItemWithSub>
+        <AsideMenuItemWithSub
+          to="#"
+          icon="shield-tick"
+          title="Gestion des pays"
           isCollapsed={isCollapsed}
-        />
-      </AsideMenuItemWithSub>
-      <AsideMenuItemWithSub
-        to="#"
-        icon="shield-tick"
-        title="Gestion de pays"
-        isCollapsed={isCollapsed}
-      >
-        <AsideMenuItem
-          to="/AddPays"
-          icon="plus"
-          title="Création d'un pays"
-          isCollapsed={isCollapsed}
-        />
-        <AsideMenuItem
-          to="/ListPays"
-          icon="list"
-          title="Liste des pays"
-          isCollapsed={isCollapsed}
-        />
+        >
+          <AsideMenuItem
+            to="#"
+            icon="plus"
+            title="Création d'un pays"
+            isCollapsed={isCollapsed}
+          />
+          <AsideMenuItem
+            to="#"
+            icon="list"
+            title="Liste des pays"
+            isCollapsed={isCollapsed}
+          />
+        </AsideMenuItemWithSub>
       </AsideMenuItemWithSub>
     </>
   );
