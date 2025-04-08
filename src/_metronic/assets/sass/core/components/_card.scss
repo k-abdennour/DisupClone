@@ -93,8 +93,8 @@
 
     // Body
     .card-body {
-        padding: $card-py $card-px;
-        color: var(--#{$prefix}card-color);
+     padding: 0rem 0.25rem;
+     color: var(--#{$prefix}card-color);
     }
 
     // Footer
