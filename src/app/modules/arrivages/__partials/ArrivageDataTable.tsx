@@ -72,10 +72,10 @@ const ArrivageDataTable: React.FC<PaysDataTableProps> = ({
         <Dropdown.Item onClick={() => navigate(`/consultation/${rowData.id}`)}>
           <BsFileEarmarkText className="me-2" /> Consultation
         </Dropdown.Item>
-        <Dropdown.Item>
+        <Dropdown.Item onClick={() => navigate(`/paiement/${rowData.id}`)}>
           <BsCreditCard className="me-2" /> Modalité de paiement
         </Dropdown.Item>
-        <Dropdown.Item>
+        <Dropdown.Item onClick={() => navigate(`/logistique/${rowData.id}`)}>
           <BsTruck className="me-2" /> Logistique
         </Dropdown.Item>
         <Dropdown.Item disabled>

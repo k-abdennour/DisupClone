@@ -199,10 +199,12 @@ const Consultation: React.FC = () => {
                   </Form.Group>
                 </Col>
               </Row>
-                           {/* Accordéon React-Bootstrap */}
-                           <Accordion className="mt-4">
+              {/* Accordéon React-Bootstrap */}
+              <Accordion className="mt-4">
                 <Accordion.Item eventKey="0">
-                  <Accordion.Header><h2>Plus de détails</h2></Accordion.Header>
+                  <Accordion.Header>
+                    <h2>Plus de détails</h2>
+                  </Accordion.Header>
                   <Accordion.Body>
                     <Row className="mb-3">
                       <Col md={4}>

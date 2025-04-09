@@ -10,6 +10,8 @@ import BuilderPageWrapper from "../pages/layout-builder/BuilderPageWrapper";
 import Arrivage from "../modules/arrivages/Arrivage";
 import AddArrivage from "../modules/arrivages/AddArrivage";
 import Consultation from "../modules/arrivages/Consultation";
+import Paiement from "../modules/arrivages/Paiement ";
+import Logistique from "../modules/arrivages/Logistique";
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
@@ -118,6 +120,22 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <Consultation />
+            </SuspensedView>
+          }
+        />
+                <Route
+          path="/paiement/:id"
+          element={
+            <SuspensedView>
+              <Paiement />
+            </SuspensedView>
+          }
+        />
+                        <Route
+          path="/logistique/:id"
+          element={
+            <SuspensedView>
+              <Logistique />
             </SuspensedView>
           }
         />

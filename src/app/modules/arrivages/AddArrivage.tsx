@@ -12,6 +12,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { BsSearch, BsThreeDotsVertical, BsUpload } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 const AddArrivage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -28,6 +29,8 @@ const AddArrivage: React.FC = () => {
   const [searchCommandeQuery, setSearchCommandeQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [typeDocument, setTypeDocument] = useState("");
+    const navigate = useNavigate();
+  
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleUploadClick = () => {
     if (fileInputRef.current) {
@@ -592,9 +595,13 @@ const AddArrivage: React.FC = () => {
               </Row>
 
               <div className="text-end mb-4  mt-10">
-                <Button variant="secondary" className="me-5">
-                  Annuler
-                </Button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => navigate(-1)}
+              >
+                Annuler
+              </button>
                 <Button type="submit">Créer l'arrivage</Button>
               </div>
             </Form>
