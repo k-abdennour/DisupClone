@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router';
 import { checkIsActive, KTIcon, WithChildren } from '../../../helpers';
- 
+
 type Props = {
   to: string;
   title: string;
@@ -12,7 +12,7 @@ type Props = {
   hasBullet?: boolean;
   isCollapsed?: boolean;
 };
- 
+
 const AsideMenuItem: FC<Props & WithChildren> = ({
   children,
   to,
@@ -24,6 +24,7 @@ const AsideMenuItem: FC<Props & WithChildren> = ({
 }) => {
   const { pathname } = useLocation();
   const isActive = checkIsActive(pathname, to);
+
  
   return (
 <div className={clsx('menu-item', { 'd-none': isCollapsed && !isActive })}>
@@ -46,4 +47,7 @@ const AsideMenuItem: FC<Props & WithChildren> = ({
   );
 };
  
+
+
+  
 export { AsideMenuItem };
