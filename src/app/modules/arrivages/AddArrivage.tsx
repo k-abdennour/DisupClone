@@ -15,28 +15,20 @@ import { BsSearch, BsThreeDotsVertical, BsUpload } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
 const AddArrivage: React.FC = () => {
-  const [formData, setFormData] = useState({
-    toleranceTonnage: "",
-    dateBooking: "",
-    dateFixBuyers: "",
-    coutFinancement: "",
-    fretPrixDevise: "",
-    dateReceptionFP: "",
-    dateDepotLC: "",
-    dispatchDemurrage: false,
-  });
 
   const [searchCommandeQuery, setSearchCommandeQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("infosContrat");
   const [typeDocument, setTypeDocument] = useState("");
-    const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
+
   const [commandes, setCommandes] = useState<
     {
       id: string;
@@ -52,17 +44,9 @@ const AddArrivage: React.FC = () => {
     }[]
   >([]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: checked }));
-  };
+
+
 
   const handleSearchCommande = () => {
     setIsSearching(true);
@@ -107,7 +91,9 @@ const AddArrivage: React.FC = () => {
           <Card.Body>
             {/* ✅ GESTION DES COMMANDES */}
             <div className="mb-5">
-              <h1 className="card-header-title mb-2">Importation des commandes</h1>
+              <h1 className="card-header-title mb-2">
+                Importation des commandes
+              </h1>
 
               <Form>
                 <Row className="align-items-end">
@@ -217,7 +203,7 @@ const AddArrivage: React.FC = () => {
 
       `}</style>
       {/* ✅ FORMULAIRE D’ARRIVAGE */}
-      <Card  className="mt-3">
+      <Card className="mt-3">
         <div className="card border-0 shadow-sm rounded-3 p-8 ">
           <h5 className="card-header-title mb-1">
             Formulaire de création d'arrivage
@@ -227,27 +213,55 @@ const AddArrivage: React.FC = () => {
           </p>
           <Card.Body>
             <Form>
-              {/* Ligne 1 : Description + Facture */}
+              {/* Ligne : Tolérance Tonnage + Date Booking */}
               <Row className="mb-3">
-                <Col md={15}>
+                <Col md={4}>
                   <Form.Group>
-                    <Form.Label>Description</Form.Label>
+                    <Form.Label>Tolérance Tonnage</Form.Label>
                     <Form.Control
-                      type="text"
-                      name="description"
-                      placeholder="Description de l'arrivage"
+                      type="number"
+                      name="toleranceTonnage"
+                      placeholder="Ex: 5"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>Date Booking</Form.Label>
+                    <Form.Control type="date" name="dateBooking" />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              {/* Ligne : Date Fix Buyers + Coût Financement */}
+              <Row className="mb-3">
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>Date Fix Buyers</Form.Label>
+                    <Form.Control type="date" name="dateFixBuyers" />
+                  </Form.Group>
+                </Col>
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>Coût de Financement</Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="coutFinancement"
+                      placeholder="Ex: 25000.00"
                     />
                   </Form.Group>
                 </Col>
               </Row>
+
+              {/* Ligne : Fret Prix Devise + Date Réception FP */}
               <Row className="mb-3">
                 <Col md={4}>
                   <Form.Group>
-                    <Form.Label>Numéro Facture Proforma</Form.Label>
+                    <Form.Label>Fret (Prix en Devise)</Form.Label>
                     <Form.Control
-                      type="text"
-                      name="numeroFactureProforma"
-                      placeholder="Ex: FP-2025-0458"
+                      type="number"
+                      name="fretPrixDevise"
+                      placeholder="Ex: 350000.00"
                     />
                   </Form.Group>
                 </Col>
@@ -259,349 +273,238 @@ const AddArrivage: React.FC = () => {
                 </Col>
               </Row>
 
-              {/* Ligne 2 : Date réception FP + Pays */}
-              <Row className="mb-2">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Pays</Form.Label>
-                    <Form.Select name="pays">
-                      <option>Sélectionner un pays</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Fournisseur</Form.Label>
-                    <Form.Select name="fournisseur">
-                      <option>Sélectionner un fournisseur</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Devise</Form.Label>
-                    <Form.Select name="devise">
-                      <option>Sélectionner une devise</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              {/* Ligne 4 : Tonnage + Tolérance */}
+              {/* Ligne : Date Dépôt LC */}
               <Row className="mb-3">
                 <Col md={4}>
                   <Form.Group>
-                    <Form.Label>Tonnage Total</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="tonnageTotal"
-                      placeholder="Ex: 5000"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Tolérance Tonnage</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="toleranceTonnage"
-                      placeholder="Ex: 5"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              {/* Ligne 5 : Booking + Financement */}
-              <Row className="mb-3">
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label>Date Booking</Form.Label>
-                    <Form.Control type="date" name="dateBooking" />
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              {/* Ligne 6 : Fret + Taxes */}
-              <Row className="mb-3">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Coût Financement</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="coutFinancement"
-                      placeholder="Ex: 25000.00"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Coût Fret En Devise</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="fretPrixDevise"
-                      placeholder="Ex: 350000.00"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Montant Taxes</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="montantTaxes"
-                      placeholder="Ex: 20000.00"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              {/* Ligne 7 : Signature + Banque */}
-              <Row className="mb-3">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Date Signature Contrat</Form.Label>
-                    <Form.Control type="date" name="dateSignatureContrat" />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Banque</Form.Label>
-                    <Form.Select name="banque">
-                      <option>Sélectionner une banque</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Date Dépôt Lettre Crédit</Form.Label>
+                    <Form.Label>Date Dépôt LC à la Banque</Form.Label>
                     <Form.Control type="date" name="dateDepotLC" />
                   </Form.Group>
                 </Col>
               </Row>
+{/* Onglets Logistique supplémentaires */}
+<div className="flex flex-wrap space-x-2 border-bottom pb-2 mt-4">
+  {[
+    { id: "infosContrat", label: "Informations du contrat" },
+    { id: "nominationNavire", label: "Nomination du navire" },
+  ].map((tab) => (
+    <button
+      key={tab.id}
+      type="button"
+      onClick={() => setActiveTab(tab.id)}
+      className={`btn btn-sm me-2 ${
+        activeTab === tab.id ? "btn-primary" : "btn-outline-secondary"
+      }`}
+    >
+      {tab.label}
+    </button>
+  ))}
+</div>
 
-              {/* Ligne 8 : Dépôt LC + Demande Licence */}
-              <Row className="mb-3">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Date Demande Licence Import</Form.Label>
-                    <Form.Control type="date" name="dateDemandeLicence" />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Date Obtention Licence Import</Form.Label>
-                    <Form.Control type="date" name="dateObtentionLicence" />
-                  </Form.Group>
-                </Col>
-              </Row>
+<div className="border rounded p-4 mt-3">
+  {/* Onglet : Informations du contrat */}
+  {activeTab === "infosContrat" && (
+    <div className="space-y-6">
+      <Row className="mb-3">
+        <Col md={4}>
+          <Form.Group>
+            <Form.Label>Date limite de chargement *</Form.Label>
+            <Form.Control type="date" name="dateLimiteChargement" required />
+          </Form.Group>
+        </Col>
+        <Col md={4}>
+          <Form.Group>
+            <Form.Label>Taux de déchargement *</Form.Label>
+            <Form.Control type="text" name="tauxDechargement" required />
+          </Form.Group>
+        </Col>
+      </Row>
 
-              {/* Ligne 9 : Obtention + Port */}
-              <Row className="mb-3">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Port Chargement</Form.Label>
-                    <Form.Select name="portChargement">
-                      <option>Sélectionner un port</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-              </Row>
+      <Row className="mb-3">
+        <Col md={2}>
+          <Form.Check
+            type="checkbox"
+            label="Half Dispatch"
+            name="halfDispatch"
+          />
+        </Col>
+        <Col md={2}>
+          <Form.Check
+            type="checkbox"
+            label="Demurrage"
+            name="demurrage"
+          />
+        </Col>
+      </Row>
 
-              {/* Ligne 10 : Date limite + début chargement */}
-              <Row className="mb-3">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Date Limite Chargement</Form.Label>
-                    <Form.Control type="date" name="dateLimiteChargement" />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Date Début Chargement</Form.Label>
-                    <Form.Control type="date" name="dateDebutChargement" />
-                  </Form.Group>
-                </Col>
-              </Row>
+      <Row className="mb-3">
+        <Col md={4}>
+          <Form.Group>
+            <Form.Label>Port de chargement</Form.Label>
+            <Form.Select name="portChargement">
+              <option value="">Sélectionner un port</option>
+              <option value="Casablanca">Casablanca</option>
+              <option value="Jorf Lasfar">Jorf Lasfar</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+      </Row>
 
-              {/* Ligne 11 : Poids */}
-              <Row className="mb-3">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Poids Départ</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="poidsDepart"
-                      placeholder="Ex: 5000.00"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Poids Arrivée</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="poidsArrivee"
-                      placeholder="Ex: 4980.00"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Poids Moyen</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="poidsMoyen"
-                      placeholder="Ex: 4990.00"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+      {/* Téléversement document ici */}
+      <Row className="mb-3 align-items-end">
+        <Col md={10}>
+          <Form.Group>
+            <Form.Label>Type de document</Form.Label>
+            <Form.Select
+              name="typeDocumentContrat"
+              value={typeDocument}
+              onChange={(e) => setTypeDocument(e.target.value)}
+            >
+              <option value="">Sélectionner un type de document</option>
+              <option value="facture">Facture proforma</option>
+              <option value="contrat">Contrat</option>
+              <option value="lc">Demande LC / Engagement d'import</option>
+              <option value="licence">Licence d'import</option>
+              <option value="radio">Certificat non-radioactif</option>
+              <option value="explosif">Certificat non-explosif</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
 
-              {/* Ligne 12 : Qualités */}
-              <Row className="mb-3">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Qualité Départ</Form.Label>
-                    <Form.Select name="qualiteDepart">
-                      <option>Sélectionner une qualité</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Qualité Arrivée</Form.Label>
-                    <Form.Select name="qualiteArrivee">
-                      <option>Sélectionner une qualité</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Qualité Moyenne</Form.Label>
-                    <Form.Select name="qualiteMoyenne">
-                      <option>Sélectionner une qualité</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-              </Row>
+        <Col md={2}>
+          <Button
+            style={{ backgroundColor: "#fc5421", borderColor: "#fc5421" }}
+            className="w-100 d-flex align-items-center justify-content-center text-white"
+            onClick={handleUploadClick}
+            disabled={typeDocument === ""}
+          >
+            <BsUpload className="me-2" />
+            Télécharger
+          </Button>
+          <Form.Control
+            type="file"
+            ref={fileInputRef}
+            name="documentContrat"
+            style={{ display: "none" }}
+          />
+        </Col>
+      </Row>
+    </div>
+  )}
 
-              {/* Ligne 13 : NOR + Déchargement */}
-              <Row className="mb-3">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Date Heure NOR</Form.Label>
-                    <Form.Control type="date" name="dateHeureNOR" />
-                  </Form.Group>
-                </Col>
+  {/* Onglet : Nomination du navire */}
+  {activeTab === "nominationNavire" && (
+    <div className="space-y-6">
+      <Row className="mb-3">
+        <Col md={4}>
+          <Form.Group>
+            <Form.Label>Compagnie maritime</Form.Label>
+            <Form.Control type="text" name="compagnieMaritime" />
+          </Form.Group>
+        </Col>
+        <Col md={4}>
+          <Form.Group>
+            <Form.Label>Nom du navire</Form.Label>
+            <Form.Control type="text" name="nomNavire" />
+          </Form.Group>
+        </Col>
+      </Row>
 
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Taux Déchargement</Form.Label>
-                    <Form.Control type="date" name="tauxDechargement" />
-                  </Form.Group>
-                </Col>
+      <Row className="mb-3">
+        <Col md={4}>
+          <Form.Label>Date début chargement (LAYCAN)</Form.Label>
+          <Form.Control type="date" name="dateDebutLaycan" />
+        </Col>
+        <Col md={4}>
+          <Form.Label>Date fin chargement (LAYCAN)</Form.Label>
+          <Form.Control type="date" name="dateFinLaycan" />
+        </Col>
+      </Row>
 
-                <Col md={4} className="pt-11">
-                  <Form.Group controlId="dispatchDemurrage">
-                    <Form.Check
-                      type="switch"
-                      name="dispatchDemurrage"
-                      label="Dispatch Demurrage"
-                      onChange={handleCheckboxChange}
-                      checked={formData.dispatchDemurrage}
-                      className="custom-switch-orange"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+      <Row className="mb-3">
+        <Col md={4}>
+          <Form.Label>Date de départ port origine</Form.Label>
+          <Form.Control type="date" name="dateDepartPortOrigine" />
+        </Col>
+        <Col md={4}>
+          <Form.Label>Date d'arrivée port EL JORF</Form.Label>
+          <Form.Control type="date" name="dateArriveePortJorf" />
+        </Col>
+      </Row>
 
-              {/* Ligne 15 : Conditions & Infos contractuelles */}
-              <Row className="mb-3">
-                <Col md={15}>
-                  <Form.Group>
-                    <Form.Label>Conditions Achat</Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      rows={2}
-                      name="conditionsAchat"
-                      placeholder="Conditions d'achat"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              <Row className="mb-3">
-                <Col md={15}>
-                  <Form.Group>
-                    <Form.Label>Informations Contractuelles</Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      rows={2}
-                      name="informationsContractuelles"
-                      placeholder="Informations contractuelles"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-              {/* Ligne 16 : Type de document + Téléversement */}
-              <Row className="mb-3 align-items-end">
-                <Col md={10}>
-                  <Form.Group>
-                    <Form.Label>Type de document</Form.Label>
-                    <Form.Select
-                      name="typeDocument"
-                      value={typeDocument}
-                      onChange={(e) => setTypeDocument(e.target.value)}
-                    >
-                      <option value="">Sélectionner un type de document</option>
-                      <option value="facture">Facture proforma</option>
-                      <option value="contrat">Contrat</option>
-                      <option value="lc">
-                        Demande LC ou L'engagement d'import
-                      </option>
-                      <option value="licence">Licence d'import</option>
-                      <option value="radio">
-                        Certification de non-radio activité
-                      </option>
-                      <option value="explosif">
-                        Certificat de non explosif
-                      </option>
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
+      <Row className="mb-3">
+        <Col md={4}>
+          <Form.Label>Taux de déchargement</Form.Label>
+          <Form.Control type="text" name="tauxDechargementNavire" />
+        </Col>
+        <Col md={4}>
+          <Form.Label>Demurrage Rate</Form.Label>
+          <Form.Control type="text" name="demurrageRate" />
+        </Col>
+      </Row>
 
-                <Col md={2}>
-                  {/* Bouton stylé qui déclenche l'upload */}
-                  <Button
-                    style={{
-                      backgroundColor: "#fc5421",
-                      borderColor: "#fc5421",
-                    }}
-                    className="w-100 d-flex align-items-center justify-content-center text-white"
-                    onClick={handleUploadClick}
-                    disabled={typeDocument === ""}
-                  >
-                    <BsUpload className="me-2" />
-                    Télécharger
-                  </Button>
+      <Row className="mb-3">
+        <Col md={2}>
+          <Form.Check
+            type="checkbox"
+            label="Éligible Half Dispatch"
+            name="eligibleHalfDispatch"
+          />
+        </Col>
+        <Col md={4}>
+          <Form.Label>Montant Demurrage</Form.Label>
+          <Form.Control type="number" name="montantDemurrage" />
+        </Col>
+      </Row>
 
-                  {/* Champ réel de type "file", masqué */}
-                  <Form.Control
-                    type="file"
-                    ref={fileInputRef}
-                    name="document"
-                    style={{ display: "none" }}
-                  />
-                </Col>
-              </Row>
+      {/* Téléversement document nomination */}
+      <Row className="mb-3 align-items-end">
+        <Col md={10}>
+          <Form.Group>
+            <Form.Label>Type de document</Form.Label>
+            <Form.Select
+              name="typeDocumentNavire"
+              value={typeDocument}
+              onChange={(e) => setTypeDocument(e.target.value)}
+            >
+              <option value="">Sélectionner un type de document</option>
+              <option value="charter_party">Charter Party</option>
+              <option value="declaration_navire">Déclaration Navire</option>
+              <option value="certificat">Certificat</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+
+        <Col md={2}>
+          <Button
+            style={{ backgroundColor: "#fc5421", borderColor: "#fc5421" }}
+            className="w-100 d-flex align-items-center justify-content-center text-white"
+            onClick={handleUploadClick}
+            disabled={typeDocument === ""}
+          >
+            <BsUpload className="me-2" />
+            Télécharger
+          </Button>
+          <Form.Control
+            type="file"
+            ref={fileInputRef}
+            name="documentNomination"
+            style={{ display: "none" }}
+          />
+        </Col>
+      </Row>
+    </div>
+  )}
+</div>
 
               <div className="text-end mb-4  mt-10">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => navigate(-1)}
-              >
-                Annuler
-              </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => navigate(-1)}
+                >
+                  Annuler
+                </button>
                 <Button type="submit">Créer l'arrivage</Button>
               </div>
             </Form>
