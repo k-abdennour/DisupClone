@@ -22,13 +22,19 @@ const AddArrivage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("infosContrat");
   const [typeDocument, setTypeDocument] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+  const [typeDocumentNavire, setTypeDocumentNavire] = useState("");
+  const [qualificationForm, setQualificationForm] = useState({ date: "", conforme: false, commentaire: "" });
+  const [qualificationHistorique, setQualificationHistorique] = useState<any[]>([]);
+  const [typePieceQualification, setTypePieceQualification] = useState("");
+  const [surveillants, setSurveillants] = useState<any[]>([]);
+  const [surveillantForm, setSurveillantForm] = useState({ pays: "", nom: "" });
   const handleUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
-
+  const paysOptions = ["Maroc", "France", "Espagne", "Italie"];
+  const surveillantOptions = ["SGS Maroc", "Bureau Veritas", "Intertek"];
   const [commandes, setCommandes] = useState<
     {
       id: string;
@@ -46,7 +52,9 @@ const AddArrivage: React.FC = () => {
 
 
 
-
+  const removeSurveillant = (index: number) => {
+    setSurveillants((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleSearchCommande = () => {
     setIsSearching(true);
@@ -285,8 +293,7 @@ const AddArrivage: React.FC = () => {
 {/* Onglets Logistique supplémentaires */}
 <div className="flex flex-wrap space-x-2 border-bottom pb-2 mt-4">
   {[
-    { id: "infosContrat", label: "Informations du contrat" },
-    { id: "nominationNavire", label: "Nomination du navire" },
+{ id: "infosContrat", label: "Informations du contrat" }, { id: "nominationNavire", label: "Nomination du navire" }, { id: "nominationSurveillant", label: "Nomination du Surveillant" }, { id: "qualificationArrivage", label: "Qualification d’arrivage" }
   ].map((tab) => (
     <button
       key={tab.id}
@@ -392,109 +399,154 @@ const AddArrivage: React.FC = () => {
     </div>
   )}
 
-  {/* Onglet : Nomination du navire */}
-  {activeTab === "nominationNavire" && (
-    <div className="space-y-6">
-      <Row className="mb-3">
-        <Col md={4}>
-          <Form.Group>
-            <Form.Label>Compagnie maritime</Form.Label>
-            <Form.Control type="text" name="compagnieMaritime" />
-          </Form.Group>
-        </Col>
-        <Col md={4}>
-          <Form.Group>
-            <Form.Label>Nom du navire</Form.Label>
-            <Form.Control type="text" name="nomNavire" />
-          </Form.Group>
-        </Col>
-      </Row>
+{activeTab === "nominationNavire" && (
+                  <div className="space-y-6">
+                    <Row className="mb-3">
+                      <Col md={4}>
+                        <Form.Group>
+                          <Form.Label>Compagnie maritime</Form.Label>
+                          <Form.Control type="text" name="compagnieMaritime" />
+                        </Form.Group>
+                      </Col>
+                      <Col md={4}>
+                        <Form.Group>
+                          <Form.Label>Nom du navire</Form.Label>
+                          <Form.Control type="text" name="nomNavire" />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                    <Row className="mb-3">
+                      <Col md={4}><Form.Label>Date début chargement (LAYCAN)</Form.Label><Form.Control type="date" name="dateDebutLaycan" /></Col>
+                      <Col md={4}><Form.Label>Date fin chargement (LAYCAN)</Form.Label><Form.Control type="date" name="dateFinLaycan" /></Col>
+                    </Row>
+                    <Row className="mb-3">
+                      <Col md={4}><Form.Label>Date de départ port origine</Form.Label><Form.Control type="date" name="dateDepartPortOrigine" /></Col>
+                      <Col md={4}><Form.Label>Date d'arrivée port EL JORF</Form.Label><Form.Control type="date" name="dateArriveePortJorf" /></Col>
+                    </Row>
+                    <Row className="mb-3">
+                      <Col md={4}><Form.Label>Taux de déchargement</Form.Label><Form.Control type="text" name="tauxDechargementNavire" /></Col>
+                      <Col md={4}><Form.Label>Demurrage Rate</Form.Label><Form.Control type="text" name="demurrageRate" /></Col>
+                    </Row>
+                    <Row className="mb-3">
+                      <Col md={2}><Form.Check type="checkbox" label="Éligible Half Dispatch" name="eligibleHalfDispatch" /></Col>
+                      <Col md={4}><Form.Label>Montant Demurrage</Form.Label><Form.Control type="number" name="montantDemurrage" /></Col>
+                    </Row>
+                    <Row className="mb-3 align-items-end">
+                      <Col md={10}>
+                        <Form.Group>
+                          <Form.Label>Type de document</Form.Label>
+                          <Form.Select
+                            name="typeDocumentNavire"
+                            value={typeDocumentNavire}
+                            onChange={(e) => setTypeDocumentNavire(e.target.value)}
+                          >
+                            <option value="">Sélectionner un type de document</option>
+                            <option value="charter_party">Charter Party</option>
+                            <option value="declaration_navire">Déclaration Navire</option>
+                            <option value="certificat">Certificat</option>
+                          </Form.Select>
+                        </Form.Group>
+                      </Col>
+                      <Col md={2}>
+                        <Button
+                          style={{ backgroundColor: "#fc5421", borderColor: "#fc5421" }}
+                          className="w-100 d-flex align-items-center justify-content-center text-white"
+                          onClick={handleUploadClick}
+                          disabled={typeDocumentNavire === ""}
+                        >
+                          <BsUpload className="me-2" /> Télécharger
+                        </Button>
+                        <Form.Control type="file" ref={fileInputRef} name="documentNomination" style={{ display: "none" }} />
+                      </Col>
+                    </Row>
+                  </div>
+                )}
+                {/* Onglet Nomination du Surveillant */}
+                {activeTab === "nominationSurveillant" && (
+                  <div className="space-y-6">
+                    <Row className="mb-3">
+                      <Col md={4}>
+                        <Form.Label>Pays</Form.Label>
+                        <Form.Select value={surveillantForm.pays} onChange={(e) => setSurveillantForm({ ...surveillantForm, pays: e.target.value })}>
+                          <option value="">Sélectionner un pays</option>
+                          {paysOptions.map((pays, index) => (
+                            <option key={index} value={pays}>{pays}</option>
+                          ))}
+                        </Form.Select>
+                      </Col>
+                      <Col md={4}>
+                        <Form.Label>Surveillant</Form.Label>
+                        <Form.Select value={surveillantForm.nom} onChange={(e) => setSurveillantForm({ ...surveillantForm, nom: e.target.value })}>
+                          <option value="">Sélectionner un surveillant</option>
+                          {surveillantOptions.map((nom, index) => (
+                            <option key={index} value={nom}>{nom}</option>
+                          ))}
+                        </Form.Select>
+                      </Col>
+                      <Col md={4} className="d-flex align-items-end">
+                        <Button onClick={() => setSurveillants([...surveillants, surveillantForm])}>Ajouter</Button>
+                      </Col>
+                    </Row>
+                    {surveillants.length > 0 && (
+                      <Table bordered>
+                        <thead><tr><th>Pays</th><th>Surveillant</th><th>Actions</th></tr></thead>
+                        <tbody>
+                          {surveillants.map((s, index) => (
+                            <tr key={index}>
+                              <td>{s.pays}</td><td>{s.nom}</td>
+                              <td><Button variant="danger" size="sm" onClick={() => removeSurveillant(index)}>Supprimer</Button></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    )}
+                  </div>
+                )}
 
-      <Row className="mb-3">
-        <Col md={4}>
-          <Form.Label>Date début chargement (LAYCAN)</Form.Label>
-          <Form.Control type="date" name="dateDebutLaycan" />
-        </Col>
-        <Col md={4}>
-          <Form.Label>Date fin chargement (LAYCAN)</Form.Label>
-          <Form.Control type="date" name="dateFinLaycan" />
-        </Col>
-      </Row>
-
-      <Row className="mb-3">
-        <Col md={4}>
-          <Form.Label>Date de départ port origine</Form.Label>
-          <Form.Control type="date" name="dateDepartPortOrigine" />
-        </Col>
-        <Col md={4}>
-          <Form.Label>Date d'arrivée port EL JORF</Form.Label>
-          <Form.Control type="date" name="dateArriveePortJorf" />
-        </Col>
-      </Row>
-
-      <Row className="mb-3">
-        <Col md={4}>
-          <Form.Label>Taux de déchargement</Form.Label>
-          <Form.Control type="text" name="tauxDechargementNavire" />
-        </Col>
-        <Col md={4}>
-          <Form.Label>Demurrage Rate</Form.Label>
-          <Form.Control type="text" name="demurrageRate" />
-        </Col>
-      </Row>
-
-      <Row className="mb-3">
-        <Col md={2}>
-          <Form.Check
-            type="checkbox"
-            label="Éligible Half Dispatch"
-            name="eligibleHalfDispatch"
-          />
-        </Col>
-        <Col md={4}>
-          <Form.Label>Montant Demurrage</Form.Label>
-          <Form.Control type="number" name="montantDemurrage" />
-        </Col>
-      </Row>
-
-      {/* Téléversement document nomination */}
-      <Row className="mb-3 align-items-end">
-        <Col md={10}>
-          <Form.Group>
-            <Form.Label>Type de document</Form.Label>
-            <Form.Select
-              name="typeDocumentNavire"
-              value={typeDocument}
-              onChange={(e) => setTypeDocument(e.target.value)}
-            >
-              <option value="">Sélectionner un type de document</option>
-              <option value="charter_party">Charter Party</option>
-              <option value="declaration_navire">Déclaration Navire</option>
-              <option value="certificat">Certificat</option>
-            </Form.Select>
-          </Form.Group>
-        </Col>
-
-        <Col md={2}>
-          <Button
-            style={{ backgroundColor: "#fc5421", borderColor: "#fc5421" }}
-            className="w-100 d-flex align-items-center justify-content-center text-white"
-            onClick={handleUploadClick}
-            disabled={typeDocument === ""}
-          >
-            <BsUpload className="me-2" />
-            Télécharger
-          </Button>
-          <Form.Control
-            type="file"
-            ref={fileInputRef}
-            name="documentNomination"
-            style={{ display: "none" }}
-          />
-        </Col>
-      </Row>
-    </div>
-  )}
+                {/* Onglet Qualification d’arrivage */}
+                {activeTab === "qualificationArrivage" && (
+                  <div className="space-y-6">
+                    <Row className="mb-3">
+                      <Col md={4}><Form.Label>Date</Form.Label><Form.Control type="date" name="dateQualification" value={qualificationForm.date} onChange={(e) => setQualificationForm({ ...qualificationForm, date: e.target.value })} /></Col>
+                      <Col md={2} className="d-flex align-items-end">
+                        <Form.Check
+                          type="checkbox"
+                          label="Qualité Conforme"
+                          checked={qualificationForm.conforme}
+                          onChange={(e) => setQualificationForm({ ...qualificationForm, conforme: e.target.checked })}
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="mb-3">
+                      <Col md={6}><Form.Label>Commentaire</Form.Label><Form.Control as="textarea" name="commentaire" rows={3} value={qualificationForm.commentaire} onChange={(e) => setQualificationForm({ ...qualificationForm, commentaire: e.target.value })} /></Col>
+                      <Col md={3}>
+                        <Form.Label>Type de pièce</Form.Label>
+                        <Form.Select value={typePieceQualification} onChange={(e) => setTypePieceQualification(e.target.value)}>
+                          <option value="">Sélectionner un type</option>
+                          <option value="rapport">Rapport</option>
+                          <option value="photo">Photo</option>
+                        </Form.Select>
+                      </Col>
+                      <Col md={3} className="d-flex align-items-end">
+                        <Button onClick={handleUploadClick} disabled={typePieceQualification === ""} className="w-100 bg-primary text-white">
+                          <BsUpload className="me-2" /> Upload
+                        </Button>
+                        <Form.Control type="file" ref={fileInputRef} name="documentQualification" style={{ display: "none" }} />
+                      </Col>
+                    </Row>
+                    {/* Liste des qualifications */}
+                    {qualificationHistorique.length > 0 && (
+                      <Table bordered>
+                        <thead><tr><th>Date</th><th>Conforme</th><th>Commentaire</th></tr></thead>
+                        <tbody>
+                          {qualificationHistorique.map((q, i) => (
+                            <tr key={i}><td>{q.date}</td><td>{q.conforme ? "Oui" : "Non"}</td><td>{q.commentaire}</td></tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    )}
+                  </div>
+                )}
 </div>
 
               <div className="text-end mb-4  mt-10">

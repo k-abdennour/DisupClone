@@ -38,7 +38,7 @@ const ArrivageSearchForm: React.FC<SearchFormProps> = ({
 
 
 
-        .search-form .btn-filter:hover {
+        .search-form .btn-filter:hover i{
         background-color: #fc5421;
         }
 

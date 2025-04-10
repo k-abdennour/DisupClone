@@ -13,58 +13,50 @@ export function AsideMenuMain({ isCollapsed = false }: AsideMenuMainProps) {
 
   return (
     <>
-     
-      
-        <AsideMenuItemWithSub
-          to="#"
-          icon="shield-tick"
-          title="Gestion des Fournisseurs"
-          isCollapsed={isCollapsed}
-        >
-          <AsideMenuItemWithSub
+      {/* <AsideMenuItem
+        to="/dashboard"
+        icon="element-11"
+        title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
+      /> */}
+      {/* <AsideMenuItem to="/builder" icon="switch" title="Layout Builder" /> */}
+
+      {/* <AsideMenuItemWithSub
         to="#"
         icon="shield-tick"
         title="Gestion des référentiels "
         isCollapsed={isCollapsed}
       >
-
-          <AsideMenuItem
-            to="/addFournisseur"
-            icon="plus"
-            title="Création d'un Fournisseur"
-            isCollapsed={isCollapsed}
-          />
-          <AsideMenuItem
-            to="/liste_fournisseurs"
-            icon="list"
-            title="Liste des fournisseurs"
-            isCollapsed={isCollapsed}
-          />
-        </AsideMenuItemWithSub>
-        <AsideMenuItemWithSub
-          to="#"
-          icon="shield-tick"
-          title="Gestion des pays"
+      <AsideMenuItemWithSub
+        to="#"
+        icon="shield-tick"
+        title="Gestion de pays"
+        isCollapsed={isCollapsed}
+      >
+        <AsideMenuItem
+          to="/AddPays"
+          title="Création d'un pays"
           isCollapsed={isCollapsed}
-        >
-          <AsideMenuItem
-            to="#"
-            icon="plus"
-            title="Création d'un pays"
-            isCollapsed={isCollapsed}
-          />
-          <AsideMenuItem
-            to="#"
-            icon="list"
-            title="Liste des pays"
-            isCollapsed={isCollapsed}
-          />
+        />
+        <AsideMenuItem
+          to="/pays"
+          title="Liste des pays"
+          isCollapsed={isCollapsed}
+        />
+      </AsideMenuItemWithSub>
+      </AsideMenuItemWithSub> */}
+
+
       <AsideMenuItemWithSub
         to="#"
         icon="shield-tick"
         title="Gestion d'arrivage "
         isCollapsed={isCollapsed}
       >
+        <AsideMenuItem
+          to="/planning"
+          title="Planning d’arrivage"
+          isCollapsed={isCollapsed}
+        />
         <AsideMenuItem
           to="/addarrivage"
           title="Création d'arrivage"

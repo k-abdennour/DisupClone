@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { Button, Card, Form, Modal } from "react-bootstrap";
+import { Button, Card, Form, Modal, Table } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface ArrivageData {
@@ -75,18 +75,9 @@ const Logistique: React.FC = () => {
     console.log("Incident signalé:", incidentForm);
     setIsIncidentDialogOpen(false); // Ferme le modal
   };
-  const [bank, setBank] = useState("");
-  const [paymentMode, setPaymentMode] = useState("");
-  const [swiftRef, setSwiftRef] = useState("");
-  const [swiftDate, setSwiftDate] = useState("");
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   const [attachments, setAttachments] = useState<File[]>([]);
-  const [activeTab, setActiveTab] = useState("planning");
-  const [dateDepart, setDateDepart] = useState<string>("");
-  const [dateArrivee, setDateArrivee] = useState<string>("");
-  const [dateAccostage, setDateAccostage] = useState<string>("");
-  const [, setPlanningData] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState("nomination");
   const [selectedDocumentType, setSelectedDocumentType] = useState<string>("");
 
   const handleProcedureInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -148,18 +139,7 @@ const Logistique: React.FC = () => {
     nom: "",
   });
   const [surveillantsData, setSurveillantsData] = useState<any[]>([]);
-  const handleAddPlanning = () => {
-    const newItem = {
-      id: planningData.length + 1,
-      dateDepart,
-      dateArrivee,
-      dateAccostage,
-    };
-    setPlanningData([...planningData, newItem]);
-    setDateDepart("");
-    setDateArrivee("");
-    setDateAccostage("");
-  };
+
   const handleAddSuiviDechargement = () => {
     const newItem = {
       id: Date.now(),
@@ -187,21 +167,6 @@ const Logistique: React.FC = () => {
       fileInputRef.current.click();
     }
   };
-  // Sample data for planning table
-  const planningData = [
-    {
-      id: 1,
-      dateDepart: "15/02/2025",
-      dateArrivee: "25/02/2025",
-      dateAccostage: "26/02/2025",
-    },
-    {
-      id: 2,
-      dateDepart: "20/02/2025",
-      dateArrivee: "01/03/2025",
-      dateAccostage: "02/03/2025",
-    },
-  ];
 
   // Sample data for navires table
   const naviresData = [
@@ -251,8 +216,7 @@ const Logistique: React.FC = () => {
   ];
 
   useEffect(() => {
-    // Remplacez par un appel réel à votre API
-    const fakeData: ArrivageData = {
+    setArrivage({
       description: "Arrivage de ferraille E1 et E2",
       proformaInvoiceNumber: "FP-2025-0458",
       proformaInvoiceDate: "2025-01-10",
@@ -262,8 +226,7 @@ const Logistique: React.FC = () => {
       totalTonnage: 2000,
       tonnageTolerance: 5,
       bookingDate: "2025-01-20",
-    };
-    setArrivage(fakeData);
+    });
   }, [id]);
   const handleOpenAutoriserDialog = (commandeId: string) => {
     setCommandeToAutoriser(commandeId);
@@ -434,12 +397,13 @@ const Logistique: React.FC = () => {
             <div className="space-y-6 mt-4">
               <div className="flex flex-wrap space-x-2 border-bottom pb-2">
                 {[
-                  { id: "planning", label: "Planning d'arrivage" },
                   { id: "nomination", label: "Nomination Navire" },
-                  { id: "surveillance", label: "Surveillant et qualification" },
-                  { id: "autorisation", label: "Autorisation Transfert" },
+                  { id: "surveillant", label: "Nomination du surveillant" },
                   { id: "procedure", label: "Procédure Portuaire" },
+                  { id: "accostage", label: "Accostage du navire" },
                   { id: "dechargement", label: "Déchargement du navire" },
+                  { id: "autorisation", label: "Autorisation de Transfert" },
+                  { id: "transfert", label: "Transfert au site" },
                 ].map((tab) => (
                   <button
                     key={tab.id}
@@ -508,82 +472,7 @@ const Logistique: React.FC = () => {
                   </div>
                 )}
 
-                {/* Onglet Planning d’arrivage */}
-                {activeTab === "planning" && (
-                  <div className="space-y-6">
-                    <div className="row mb-3">
-                      <div className="col-md-4">
-                        <label className="form-label">Date de départ</label>
-                        <input
-                          type="date"
-                          className="form-control"
-                          value={dateDepart}
-                          onChange={(e) => setDateDepart(e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <label className="form-label">Date d'arrivée</label>
-                        <input
-                          type="date"
-                          className="form-control"
-                          value={dateArrivee}
-                          onChange={(e) => setDateArrivee(e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <label className="form-label">Date d'accostage</label>
-                        <input
-                          type="date"
-                          className="form-control"
-                          value={dateAccostage}
-                          onChange={(e) => setDateAccostage(e.target.value)}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="d-flex justify-content-end mb-3">
-                      <Button onClick={handleAddPlanning}>Ajouter</Button>
-                    </div>
-
-                    <div className="table-responsive">
-                      <table className="table table-bordered">
-                        <thead>
-                          <tr>
-                            <th>N°</th>
-                            <th>Date de départ</th>
-                            <th>Date d'arrivée</th>
-                            <th>Date d'accostage</th>
-                            <th className="text-end">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {planningData.map((item) => (
-                            <tr key={item.id}>
-                              <td>{item.id}</td>
-                              <td>{item.dateDepart}</td>
-                              <td>{item.dateArrivee}</td>
-                              <td>{item.dateAccostage}</td>
-                              <td className="text-end">
-                                <Button
-                                  variant="outline-secondary"
-                                  size="sm"
-                                  className="me-2"
-                                >
-                                  Modifier
-                                </Button>
-                                <Button variant="outline-danger" size="sm">
-                                  Supprimer
-                                </Button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === "surveillance" && (
+                {activeTab === "surveillant" && (
                   <div className="space-y-6">
                     <h3 className="text-lg font-medium">
                       Surveillant et qualification
@@ -591,23 +480,6 @@ const Logistique: React.FC = () => {
 
                     <div className="space-y-6">
                       <div className="row">
-                        <div className="col-md-4">
-                          <label className="form-label">Type surveillant</label>
-                          <select
-                            className="form-control"
-                            value={surveillantForm.type}
-                            onChange={(e) =>
-                              setSurveillantForm({
-                                ...surveillantForm,
-                                type: e.target.value,
-                              })
-                            }
-                          >
-                            <option value="">Sélectionner un type</option>
-                            <option value="interne">Interne</option>
-                            <option value="externe">Externe</option>
-                          </select>
-                        </div>
                         <div className="col-md-4">
                           <label className="form-label">Pays</label>
                           <select
@@ -961,6 +833,22 @@ const Logistique: React.FC = () => {
                           />
                         </div>
                         <div className="col-md-4">
+                          <Form.Group className="mb-3">
+                            <Form.Label>Taux de déchargement</Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Ex: 5000 tonnes/jour"
+                              name="tauxDechargement"
+                              onChange={(e) =>
+                                console.log(
+                                  "Taux de déchargement:",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </Form.Group>
+                        </div>
+                        <div className="col-md-4">
                           <Form.Label htmlFor="heureNOR">
                             Heure Notice of Readiness
                           </Form.Label>
@@ -1046,6 +934,51 @@ const Logistique: React.FC = () => {
                     </div>
                   </div>
                 )}
+
+                {activeTab === "accostage" && (
+                  <div>
+                    <h4>Accostage du navire</h4>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Numéro D.U.M.</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Ex: DUM-2025-123"
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Taux de change</Form.Label>
+                      <Form.Control type="number" placeholder="Ex: 10.25" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Date NOR (Notice of Readiness)</Form.Label>
+                      <Form.Control type="date" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Date d’accostage</Form.Label>
+                      <Form.Control type="date" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Type de pièce</Form.Label>
+                      <Form.Select>
+                        <option value="">Sélectionner un type</option>
+                        <option value="bon_enlever">Bon à Enlever</option>
+                      </Form.Select>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Upload Fichier</Form.Label>
+                      <Form.Control type="file" />
+                    </Form.Group>
+                    <div className="text-end">
+                      <Button variant="primary">Enregistrer</Button>
+                    </div>
+                  </div>
+                )}
+
 
                 {activeTab === "dechargement" && (
                   <div className="space-y-6">
@@ -1190,6 +1123,102 @@ const Logistique: React.FC = () => {
                     </div>
                   </div>
                 )}
+
+{activeTab === "autorisation" && (
+            <div>
+              <h4>Autorisation de Transfert</h4>
+              <Table bordered responsive>
+                <thead>
+                  <tr>
+                    <th>N° Commande</th>
+                    <th>Qualité</th>
+                    <th>Quantité</th>
+                    <th>Tonnage Commande</th>
+                    <th>Tonnage Transféré</th>
+                    <th>Tonnage Restant</th>
+                    <th className="text-end">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>CMD001</td>
+                    <td>Qualité A</td>
+                    <td>300</td>
+                    <td>500</td>
+                    <td>200</td>
+                    <td>300</td>
+                    <td className="text-end">
+                      <Button variant="danger" size="sm">Arrêter</Button>
+                    </td>
+                  </tr>
+                </tbody>
+              </Table>
+            </div>
+          )}
+           {activeTab === "transfert" && (
+            <div>
+              <h4>Transfert au site</h4>
+              <Form className="mb-4">
+                <Form.Group className="mb-3">
+                  <Form.Label>Numéro D.U.M.</Form.Label>
+                  <Form.Select>
+                    <option value="">Sélectionner un DUM</option>
+                    <option>DUM-2025-001</option>
+                    <option>DUM-2025-002</option>
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Commande</Form.Label>
+                  <Form.Select>
+                    <option value="">Sélectionner une commande</option>
+                    <option>CMD001</option>
+                    <option>CMD002</option>
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Matricule Camion</Form.Label>
+                  <Form.Control type="text" placeholder="Ex: 12345-A-01" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Prestataire de chargement</Form.Label>
+                  <Form.Select>
+                    <option value="">Sélectionner un prestataire</option>
+                    <option>Transport BENAISSA</option>
+                    <option>TRANS CARGOS</option>
+                  </Form.Select>
+                </Form.Group>
+
+                <div className="text-end">
+                  <Button variant="primary">Enregistrer</Button>
+                </div>
+              </Form>
+
+              <h5>Historique des transferts</h5>
+              <Table bordered responsive>
+                <thead>
+                  <tr>
+                    <th>DUM</th>
+                    <th>Commande</th>
+                    <th>Matricule Camion</th>
+                    <th>Prestataire</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>DUM-2025-001</td>
+                    <td>CMD001</td>
+                    <td>12345-A-01</td>
+                    <td>Transport BENAISSA</td>
+                    <td>2025-04-10</td>
+                  </tr>
+                </tbody>
+              </Table>
+            </div>
+          )}
                 <Modal
                   show={isIncidentDialogOpen}
                   onHide={() => setIsIncidentDialogOpen(false)}
