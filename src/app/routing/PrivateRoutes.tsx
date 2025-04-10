@@ -7,6 +7,11 @@ import {MenuTestPage} from '../pages/MenuTestPage'
 import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
 import {WithChildren} from '../../_metronic/helpers'
 import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper'
+import FournisseurPage from '../modules/gestion_des_referenciels/fournisseur/Fournisseur'
+import AddFournisseurPage from '../modules/gestion_des_referenciels/fournisseur/AddFournisseur'
+import DetailsFournisseurPage from '../modules/gestion_des_referenciels/fournisseur/DetailsFournisseur'
+import UpdateFournisseurPage from '../modules/gestion_des_referenciels/fournisseur/UpdateFournisseur'
+
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -31,6 +36,39 @@ const PrivateRoutes = () => {
             </SuspensedView>
           }
         />
+        <Route
+          path='addFournisseur'
+          element={
+            <SuspensedView>
+              <AddFournisseurPage/>
+            </SuspensedView>
+          }
+        />        
+         <Route
+          path='liste_fournisseurs'
+          element={
+            <SuspensedView>
+              <FournisseurPage/>
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='details_fournisseurs'
+          element={
+            <SuspensedView>
+              <DetailsFournisseurPage/>
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='Modifier_fournisseurs'
+          element={
+            <SuspensedView>
+              <UpdateFournisseurPage/>
+            </SuspensedView>
+          }
+        />
+        
         <Route path='menu-test' element={<MenuTestPage />} />
         {/* Lazy Modules */}
         <Route
