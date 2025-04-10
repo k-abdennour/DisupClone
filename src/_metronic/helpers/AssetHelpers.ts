@@ -18,7 +18,6 @@ export const useIllustrationsPath = (illustrationName: string): string => {
           illustrationName.lastIndexOf(".")
         )}-dark`
       : illustrationName.substring(0, illustrationName.lastIndexOf("."));
-  return toAbsoluteUrl(
-    `/media/illustrations/${config.illustrations?.set}/${illustration}${extension}`
-  );
+      return `/media/illustrations/${config.illustrations?.set}/${illustration}${extension}`
+
 };

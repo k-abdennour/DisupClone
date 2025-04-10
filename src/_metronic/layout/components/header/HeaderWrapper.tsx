@@ -21,7 +21,7 @@ export function HeaderWrapper() {
         <Link to='/'>
           <img
             alt='Logo'
-            src={toAbsoluteUrl('/media/logos/default-dark.svg')}
+src={'./media/logos/default-dark.svg'}
             className='h-40px h-lg-40px'
             data-kt-toggle='true'
             data-kt-toggle-state='active'

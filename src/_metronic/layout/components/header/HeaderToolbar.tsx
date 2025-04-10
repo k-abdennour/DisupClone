@@ -59,7 +59,7 @@ const HeaderToolbar = () => {
           <div className="d-flex align-items-center">
             {/*begin::Symbol*/}
             <div className="symbol symbol-50px">
-              <img src={toAbsoluteUrl("/media/avatars/300-1.jpg")} alt="" />
+              <img src="/media/avatars/300-1.jpg" alt="" />
             </div>
             {/*end::Symbol*/}
 
