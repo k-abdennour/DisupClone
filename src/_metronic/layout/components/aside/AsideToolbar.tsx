@@ -9,41 +9,41 @@ const AsideToolbar = () => {
   return (
     <>
       {/*begin::User*/}
-      <div className='aside-user d-flex align-items-sm-center justify-content-center py-5'>
+      {/* <div className='aside-user d-flex align-items-sm-center justify-content-center py-5'> */}
         {/*begin::Symbol*/}
-        <div className='symbol symbol-50px'>
+        {/* <div className='symbol symbol-50px'>
           <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='' />
-        </div>
+        </div> */}
         {/*end::Symbol*/}
 
         {/*begin::Wrapper*/}
-        <div className='aside-user-info flex-row-fluid flex-wrap ms-5'>
+        {/* <div className='aside-user-info flex-row-fluid flex-wrap ms-5'> */}
           {/*begin::Section*/}
-          <div className='d-flex'>
+          {/* <div className='d-flex'> */}
             {/*begin::Info*/}
-            <div className='flex-grow-1 me-2'>
+            {/* <div className='flex-grow-1 me-2'> */}
               {/*begin::Username*/}
-              <a href='#' className='text-white text-hover-primary fs-6 fw-bold'>
+              {/* <a href='#' className='text-white text-hover-primary fs-6 fw-bold'>
                 {currentUser?.first_name} {currentUser?.last_name}
-              </a>
+              </a> */}
               {/*end::Username*/}
 
               {/*begin::Description*/}
-              <span className='text-gray-600 fw-bold d-block fs-8 mb-1'>Python dev</span>
+              {/* <span className='text-gray-600 fw-bold d-block fs-8 mb-1'>Python dev</span> */}
               {/*end::Description*/}
 
               {/*begin::Label*/}
-              <div className='d-flex align-items-center text-success fs-9'>
+              {/* <div className='d-flex align-items-center text-success fs-9'>
                 <span className='bullet bullet-dot bg-success me-1'></span>online
-              </div>
+              </div> */}
               {/*end::Label*/}
-            </div>
+            {/* </div> */}
             {/*end::Info*/}
 
             {/*begin::User menu*/}
-            <div className='me-n2'>
+            {/* <div className='me-n2'> */}
               {/*begin::Action*/}
-              <a
+              {/* <a
                 href='#'
                 className='btn btn-icon btn-sm btn-active-color-primary mt-n2'
                 data-kt-menu-trigger='click'
@@ -51,20 +51,20 @@ const AsideToolbar = () => {
                 data-kt-menu-overflow='false'
               >
                 <KTIcon iconName='setting-2' className='text-muted fs-1' />
-              </a>
+              </a> */}
 
-              <HeaderUserMenu />
+              {/* <HeaderUserMenu /> */}
               {/*end::Action*/}
-            </div>
+            {/* </div> */}
             {/*end::User menu*/}
-          </div>
+          {/* </div> */}
           {/*end::Section*/}
-        </div>
+        {/* </div> */}
         {/*end::Wrapper*/}
-      </div>
+      {/* </div> */}
       {/*end::User*/}
     </>
   )
 }
-
+ 
 export {AsideToolbar}

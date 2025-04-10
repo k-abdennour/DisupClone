@@ -1,7 +1,8 @@
-import { useIntl } from 'react-intl';
-import { KTIcon } from '../../../helpers';
-import { AsideMenuItemWithSub } from './AsideMenuItemWithSub';
-import { AsideMenuItem } from './AsideMenuItem';
+import { useIntl } from "react-intl";
+import { KTIcon } from "../../../helpers";
+import { AsideMenuItemWithSub } from "./AsideMenuItemWithSub";
+import { AsideMenuItem } from "./AsideMenuItem";
+
 
 interface AsideMenuMainProps {
   isCollapsed?: boolean;
@@ -12,24 +13,21 @@ export function AsideMenuMain({ isCollapsed = false }: AsideMenuMainProps) {
 
   return (
     <>
-      {/* <AsideMenuItem
-        to="/dashboard"
-        icon="element-11"
-        title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
-      />
-      <AsideMenuItem to="/builder" icon="switch" title="Layout Builder" /> */}
-      <AsideMenuItemWithSub
-        to="#"
-        icon="shield-tick"
-        title="Gestion des référentiels "
-        isCollapsed={isCollapsed}
-      >
+     
+      
         <AsideMenuItemWithSub
           to="#"
           icon="shield-tick"
           title="Gestion des Fournisseurs"
           isCollapsed={isCollapsed}
         >
+          <AsideMenuItemWithSub
+        to="#"
+        icon="shield-tick"
+        title="Gestion des référentiels "
+        isCollapsed={isCollapsed}
+      >
+
           <AsideMenuItem
             to="/addFournisseur"
             icon="plus"
@@ -61,8 +59,24 @@ export function AsideMenuMain({ isCollapsed = false }: AsideMenuMainProps) {
             title="Liste des pays"
             isCollapsed={isCollapsed}
           />
-        </AsideMenuItemWithSub>
+      <AsideMenuItemWithSub
+        to="#"
+        icon="shield-tick"
+        title="Gestion d'arrivage "
+        isCollapsed={isCollapsed}
+      >
+        <AsideMenuItem
+          to="/addarrivage"
+          title="Création d'arrivage"
+          isCollapsed={isCollapsed}
+        />
+        <AsideMenuItem
+          to="/arrivage"
+          title="Liste des arrivages"
+          isCollapsed={isCollapsed}
+        />
       </AsideMenuItemWithSub>
     </>
   );
 }
+

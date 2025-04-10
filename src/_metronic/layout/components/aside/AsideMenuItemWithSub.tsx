@@ -1,7 +1,9 @@
-import React from 'react';
-import clsx from 'clsx';
-import { useLocation } from 'react-router';
-import { checkIsActive, KTIcon, WithChildren } from '../../../helpers';
+
+import React from "react";
+import clsx from "clsx";
+import { useLocation } from "react-router";
+import { checkIsActive, KTIcon, WithChildren } from "../../../helpers";
+
 
 type Props = {
   to: string;
@@ -26,7 +28,13 @@ const AsideMenuItemWithSub: React.FC<Props & WithChildren> = ({
 
   return (
     <div
-      className={clsx('menu-item', { 'here show': isActive && !isCollapsed }, 'menu-accordion')}
+
+      className={clsx(
+        "menu-item",
+        { "here show": isActive && !isCollapsed },
+        "menu-accordion"
+      )}
+
       data-kt-menu-trigger="click"
     >
       <span className="menu-link">
@@ -40,20 +48,23 @@ const AsideMenuItemWithSub: React.FC<Props & WithChildren> = ({
             <KTIcon iconName={icon} className="fs-2" />
           </span>
         )}
-        {fontIcon && <i className={clsx('bi fs-3', fontIcon)}></i>}
+        {fontIcon && <i className={clsx("bi fs-3", fontIcon)}></i>}
+
         <span className="menu-title">{title}</span>
         <span className="menu-arrow"></span>
       </span>
       <div
-        className={clsx('menu-sub menu-sub-accordion', {
-          'menu-active-bg': isActive,
-          'd-none': isCollapsed, // Hide submenu when collapsed
+        className={clsx("menu-sub menu-sub-accordion", {
+          "menu-active-bg": isActive,
+          "d-none": isCollapsed, // Hide submenu when collapsed
+
         })}
       >
         {children}
       </div>
-    </div>
+    </div>  
   );
 };
 
 export { AsideMenuItemWithSub };
+

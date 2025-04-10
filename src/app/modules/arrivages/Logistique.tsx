@@ -1,0 +1,1292 @@
+import React, {
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+} from "react";
+import { Button, Card, Form, Modal } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
+
+interface ArrivageData {
+  description: string;
+  proformaInvoiceNumber: string;
+  proformaInvoiceDate: string;
+  country: string;
+  supplier: string;
+  currency: string;
+  totalTonnage: number;
+  tonnageTolerance: number;
+  bookingDate: string;
+}
+const typeIncidentOptions = [
+  { value: "technique", label: "Problème technique" },
+  { value: "securite", label: "Incident de sécurité" },
+  { value: "retard", label: "Retard important" },
+  { value: "qualite", label: "Problème de qualité" },
+  { value: "autre", label: "Autre" },
+];
+
+const documentTypesProcedure = [
+  { id: "dum", name: "Document Unique de Marchandise", required: false },
+  { id: "nor", name: "Notice of Readiness", required: false },
+  { id: "bill-lading", name: "Bill of Lading", required: false },
+  { id: "certificat-origine", name: "Certificat d'Origine", required: false },
+  { id: "certificat-qualite", name: "Certificat de Qualité", required: false },
+  {
+    id: "autorisation-douane",
+    name: "Autorisation Douanière",
+    required: false,
+  },
+];
+const Logistique: React.FC = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const handleDechargementDateChange = (field: string, value: string) => {
+    setDechargementForm((prev) => ({ ...prev, [field]: value }));
+  };
+  const [suiviDechargementForm, setSuiviDechargementForm] = useState({
+    date: "",
+    quantiteDechargee: "",
+    quantiteRestante: "",
+  });
+  const [suiviDechargement, setSuiviDechargement] = useState<any[]>([]);
+  const [arrivage, setArrivage] = useState<ArrivageData | null>(null);
+  const [dechargementForm, setDechargementForm] = useState({
+    dateDebut: "",
+    dateFin: "",
+  });
+  const [isIncidentDialogOpen, setIsIncidentDialogOpen] = useState(false);
+  const [incidentForm, setIncidentForm] = useState({
+    type: "",
+    date: "",
+    heureSurvenue: "",
+    heureResolution: "",
+    commentaire: "",
+  });
+  const handleIncidentInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setIncidentForm((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleSubmitIncident = () => {
+    console.log("Incident signalé:", incidentForm);
+    setIsIncidentDialogOpen(false); // Ferme le modal
+  };
+  const [bank, setBank] = useState("");
+  const [paymentMode, setPaymentMode] = useState("");
+  const [swiftRef, setSwiftRef] = useState("");
+  const [swiftDate, setSwiftDate] = useState("");
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
+  const [attachments, setAttachments] = useState<File[]>([]);
+  const [activeTab, setActiveTab] = useState("planning");
+  const [dateDepart, setDateDepart] = useState<string>("");
+  const [dateArrivee, setDateArrivee] = useState<string>("");
+  const [dateAccostage, setDateAccostage] = useState<string>("");
+  const [, setPlanningData] = useState<any[]>([]);
+  const [selectedDocumentType, setSelectedDocumentType] = useState<string>("");
+
+  const handleProcedureInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setProcedureForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleProcedureDateChange = (field: string, value: string) => {
+    setProcedureForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveProcedure = () => {
+    console.log("Procédure enregistrée:", procedureForm);
+    alert("Procédure portuaire enregistrée avec succès !");
+  };
+  const [procedureForm, setProcedureForm] = useState({
+    numeroDUM: "",
+    dateDUM: "",
+    tauxCharge: "",
+    dateNOR: "",
+    heureNOR: "",
+    dateAccostageNavire: "",
+  });
+  const [commandes, setCommandes] = useState([
+    { id: "CMD001", qualite: "Qualité A", quantite: 100, autorise: false },
+    { id: "CMD002", qualite: "Qualité B", quantite: 200, autorise: true },
+    { id: "CMD003", qualite: "Qualité C", quantite: 300, autorise: false },
+    { id: "CMD004", qualite: "Qualité D", quantite: 500, autorise: true },
+  ]);
+
+  const [isAutoriserDialogOpen, setIsAutoriserDialogOpen] = useState(false);
+  const [commandeToAutoriser, setCommandeToAutoriser] = useState<string | null>(
+    null
+  );
+  const [isQualificationDialogOpen, setIsQualificationDialogOpen] =
+    useState(false);
+
+  const [qualificationForm, setQualificationForm] = useState({
+    dateQualification: "",
+    commande: "",
+    commentaire: "",
+  });
+  const handleApproveNavire = (id: number) => {
+    console.log("Navire validé:", id);
+  };
+  const handleRejectNavire = (id: number) => {
+    console.log("Navire rejeté:", id);
+  };
+  const [isConsultationDialogOpen, setIsConsultationDialogOpen] =
+    useState(false);
+  const [
+    selectedSurveillantForConsultation,
+    setSelectedSurveillantForConsultation,
+  ] = useState<any | null>(null);
+
+  const [surveillantForm, setSurveillantForm] = useState({
+    type: "",
+    pays: "",
+    nom: "",
+  });
+  const [surveillantsData, setSurveillantsData] = useState<any[]>([]);
+  const handleAddPlanning = () => {
+    const newItem = {
+      id: planningData.length + 1,
+      dateDepart,
+      dateArrivee,
+      dateAccostage,
+    };
+    setPlanningData([...planningData, newItem]);
+    setDateDepart("");
+    setDateArrivee("");
+    setDateAccostage("");
+  };
+  const handleAddSuiviDechargement = () => {
+    const newItem = {
+      id: Date.now(),
+      ...suiviDechargementForm,
+    };
+    setSuiviDechargement((prev) => [...prev, newItem]);
+    setSuiviDechargementForm({
+      date: "",
+      quantiteDechargee: "",
+      quantiteRestante: "",
+    });
+  };
+  const handleSuiviDechargementInputChange = (
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    setSuiviDechargementForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSuiviDechargementDateChange = (date: string) => {
+    setSuiviDechargementForm((prev) => ({ ...prev, date }));
+  };
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  // Sample data for planning table
+  const planningData = [
+    {
+      id: 1,
+      dateDepart: "15/02/2025",
+      dateArrivee: "25/02/2025",
+      dateAccostage: "26/02/2025",
+    },
+    {
+      id: 2,
+      dateDepart: "20/02/2025",
+      dateArrivee: "01/03/2025",
+      dateAccostage: "02/03/2025",
+    },
+  ];
+
+  // Sample data for navires table
+  const naviresData = [
+    {
+      id: 1,
+      navire: "Cargo Express",
+      dateArriveeChargement: "10/02/2025",
+      dateFinChargement: "15/02/2025",
+      dateDepart: "16/02/2025",
+      dateArriveeDecharge: "26/02/2025",
+      status: "pending",
+    },
+    {
+      id: 2,
+      navire: "Ocean Voyager",
+      dateArriveeChargement: "12/02/2025",
+      dateFinChargement: "18/02/2025",
+      dateDepart: "19/02/2025",
+      dateArriveeDecharge: "01/03/2025",
+      status: "pending",
+    },
+    {
+      id: 3,
+      navire: "Maritime Star",
+      dateArriveeChargement: "15/02/2025",
+      dateFinChargement: "20/02/2025",
+      dateDepart: "21/02/2025",
+      dateArriveeDecharge: "03/03/2025",
+      status: "pending",
+    },
+  ];
+  const BANK_OPTIONS = [
+    "Attijariwafa Bank",
+    "BMCE Bank (Bank of Africa)",
+    "Banque Centrale Populaire",
+    "CIH Bank",
+    "Société Générale Maroc",
+    "Crédit du Maroc",
+    "CFG Bank",
+    "Al Barid Bank",
+  ];
+  const PAYMENT_MODE_OPTIONS = [
+    "Virement bancaire",
+    "Lettre de crédit",
+    "Chèque",
+    "Espèces",
+  ];
+
+  useEffect(() => {
+    // Remplacez par un appel réel à votre API
+    const fakeData: ArrivageData = {
+      description: "Arrivage de ferraille E1 et E2",
+      proformaInvoiceNumber: "FP-2025-0458",
+      proformaInvoiceDate: "2025-01-10",
+      country: "France",
+      supplier: "ArcelorMittal",
+      currency: "EUR",
+      totalTonnage: 2000,
+      tonnageTolerance: 5,
+      bookingDate: "2025-01-20",
+    };
+    setArrivage(fakeData);
+  }, [id]);
+  const handleOpenAutoriserDialog = (commandeId: string) => {
+    setCommandeToAutoriser(commandeId);
+    setIsAutoriserDialogOpen(true);
+  };
+
+  const handleAutoriserCommande = () => {
+    if (commandeToAutoriser) {
+      setCommandes((prevCommandes) =>
+        prevCommandes.map((cmd) =>
+          cmd.id === commandeToAutoriser ? { ...cmd, autorise: true } : cmd
+        )
+      );
+    }
+    setIsAutoriserDialogOpen(false);
+  };
+
+  const handleQualificationSubmit = () => {
+    console.log("Qualification enregistrée:", qualificationForm);
+    setIsQualificationDialogOpen(false);
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const files = Array.from(e.target.files);
+    setAttachments((prevFiles) => [...prevFiles, ...files]);
+    e.target.value = "";
+  };
+  const handleAddSurveillant = () => {
+    if (surveillantForm.type && surveillantForm.nom) {
+      setSurveillantsData((prev) => [
+        ...prev,
+        {
+          id: prev.length + 1,
+          type: surveillantForm.type,
+          pays: surveillantForm.pays,
+          surveillant: surveillantForm.nom,
+        },
+      ]);
+      setSurveillantForm({ type: "", pays: "", nom: "" });
+    }
+  };
+  const handleRemoveFile = (index: number) => {
+    setAttachments((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    alert("Paiement enregistré avec succès !");
+  };
+
+  if (!arrivage) return <div>Chargement...</div>;
+
+  return (
+    <div className="container-fluid py-4">
+      <div className="d-flex align-items-center mb-4">
+        <Button variant="light" onClick={() => navigate(-1)} className="me-3">
+          <i className="bi bi-arrow-left"></i>
+        </Button>
+        <div>
+          <h1 className="card-header-title mb-1">
+            Logistique de l'arrivage {id}
+          </h1>
+        </div>
+      </div>
+      <Card className="mt-3">
+        <div className="card border-0 shadow-sm rounded-3 p-8 row mb-3">
+          <h1 className="mt-4">Informations logistiques</h1>
+          <p className="card-header-subtitle mb-4" style={{ fontSize: "1rem" }}>
+            Gérez les informations logistiques pour cet arrivage
+          </p>
+          <form className="row g-3">
+            <div className="row mb-3">
+              <div className="col-md-13">
+                <label className="form-label">Description</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={arrivage.description}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="row mb-3">
+              <div className="col-md-4">
+                <label className="form-label">Numéro Facture Proforma</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={arrivage.proformaInvoiceNumber}
+                  disabled
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label">
+                  Date Réception Facture Proforma
+                </label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={arrivage.proformaInvoiceDate}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="row mb-3">
+              <div className="col-md-4">
+                <label className="form-label">Pays</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={arrivage.country}
+                  disabled
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label">Fournisseur</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={arrivage.supplier}
+                  disabled
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label">Devise</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={arrivage.currency}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="row mb-3">
+              <div className="col-md-4">
+                <label className="form-label">Tonnage Total</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={arrivage.totalTonnage}
+                  disabled
+                />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label">Tolérance Tonnage</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={arrivage.tonnageTolerance}
+                  disabled
+                />
+              </div>
+            </div>
+            <div className="row mb-3">
+              <div className="col-md-4">
+                <label className="form-label">Date Booking</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={arrivage.bookingDate}
+                  disabled
+                />
+              </div>
+            </div>
+
+            {/* Logistics Tabs */}
+            <div className="space-y-6 mt-4">
+              <div className="flex flex-wrap space-x-2 border-bottom pb-2">
+                {[
+                  { id: "planning", label: "Planning d'arrivage" },
+                  { id: "nomination", label: "Nomination Navire" },
+                  { id: "surveillance", label: "Surveillant et qualification" },
+                  { id: "autorisation", label: "Autorisation Transfert" },
+                  { id: "procedure", label: "Procédure Portuaire" },
+                  { id: "dechargement", label: "Déchargement du navire" },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`btn btn-sm me-2 ${
+                      activeTab === tab.id
+                        ? "btn-primary"
+                        : "btn-outline-secondary"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="border rounded p-4 mt-3">
+                {/* Onglet Nomination Navire */}
+                {activeTab === "nomination" && (
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-medium">
+                      Liste des propositions des navires
+                    </h3>
+                    <div className="rounded-md border mt-4">
+                      <table className="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>Navire</th>
+                            <th>Date d'arrivée au port de chargement</th>
+                            <th>Date de fin de chargement</th>
+                            <th>Date de départ</th>
+                            <th>Date d'arrivée au port de déchargement</th>
+                            <th className="text-end">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {naviresData.map((navire) => (
+                            <tr key={navire.id}>
+                              <td>{navire.navire}</td>
+                              <td>{navire.dateArriveeChargement}</td>
+                              <td>{navire.dateFinChargement}</td>
+                              <td>{navire.dateDepart}</td>
+                              <td>{navire.dateArriveeDecharge}</td>
+                              <td className="text-end">
+                                <Button
+                                  variant="outline-success"
+                                  size="sm"
+                                  className="me-2"
+                                  onClick={() => handleApproveNavire(navire.id)}
+                                >
+                                  Valider
+                                </Button>
+                                <Button
+                                  variant="outline-danger"
+                                  size="sm"
+                                  onClick={() => handleRejectNavire(navire.id)}
+                                >
+                                  Rejeter
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Onglet Planning d’arrivage */}
+                {activeTab === "planning" && (
+                  <div className="space-y-6">
+                    <div className="row mb-3">
+                      <div className="col-md-4">
+                        <label className="form-label">Date de départ</label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          value={dateDepart}
+                          onChange={(e) => setDateDepart(e.target.value)}
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <label className="form-label">Date d'arrivée</label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          value={dateArrivee}
+                          onChange={(e) => setDateArrivee(e.target.value)}
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <label className="form-label">Date d'accostage</label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          value={dateAccostage}
+                          onChange={(e) => setDateAccostage(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="d-flex justify-content-end mb-3">
+                      <Button onClick={handleAddPlanning}>Ajouter</Button>
+                    </div>
+
+                    <div className="table-responsive">
+                      <table className="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>N°</th>
+                            <th>Date de départ</th>
+                            <th>Date d'arrivée</th>
+                            <th>Date d'accostage</th>
+                            <th className="text-end">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {planningData.map((item) => (
+                            <tr key={item.id}>
+                              <td>{item.id}</td>
+                              <td>{item.dateDepart}</td>
+                              <td>{item.dateArrivee}</td>
+                              <td>{item.dateAccostage}</td>
+                              <td className="text-end">
+                                <Button
+                                  variant="outline-secondary"
+                                  size="sm"
+                                  className="me-2"
+                                >
+                                  Modifier
+                                </Button>
+                                <Button variant="outline-danger" size="sm">
+                                  Supprimer
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "surveillance" && (
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-medium">
+                      Surveillant et qualification
+                    </h3>
+
+                    <div className="space-y-6">
+                      <div className="row">
+                        <div className="col-md-4">
+                          <label className="form-label">Type surveillant</label>
+                          <select
+                            className="form-control"
+                            value={surveillantForm.type}
+                            onChange={(e) =>
+                              setSurveillantForm({
+                                ...surveillantForm,
+                                type: e.target.value,
+                              })
+                            }
+                          >
+                            <option value="">Sélectionner un type</option>
+                            <option value="interne">Interne</option>
+                            <option value="externe">Externe</option>
+                          </select>
+                        </div>
+                        <div className="col-md-4">
+                          <label className="form-label">Pays</label>
+                          <select
+                            className="form-control"
+                            value={surveillantForm.pays}
+                            onChange={(e) =>
+                              setSurveillantForm({
+                                ...surveillantForm,
+                                pays: e.target.value,
+                              })
+                            }
+                          >
+                            <option value="">Sélectionner un pays</option>
+                            <option value="ma">Maroc</option>
+                            <option value="fr">France</option>
+                          </select>
+                        </div>
+                        <div className="col-md-4">
+                          <label className="form-label">Surveillant</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Nom du surveillant"
+                            value={surveillantForm.nom}
+                            onChange={(e) =>
+                              setSurveillantForm({
+                                ...surveillantForm,
+                                nom: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+
+                      <div className="d-flex justify-content-end mt-3">
+                        <Button onClick={handleAddSurveillant}>
+                          Enregistrer
+                        </Button>
+                      </div>
+
+                      <div className="table-responsive">
+                        <table className="table table-bordered mt-4">
+                          <thead>
+                            <tr>
+                              <th>Type surveillant</th>
+                              <th>Surveillant</th>
+                              <th className="text-end">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {surveillantsData.map((item) => (
+                              <tr key={item.id}>
+                                <td>{item.type}</td>
+                                <td>{item.surveillant}</td>
+                                <td className="text-end">
+                                  <Button
+                                    variant="outline-primary"
+                                    size="sm"
+                                    className="me-2"
+                                    onClick={() => {
+                                      setSelectedSurveillantForConsultation(
+                                        item
+                                      );
+                                      setIsConsultationDialogOpen(true);
+                                    }}
+                                  >
+                                    Consulter
+                                  </Button>
+                                  <Button
+                                    variant="outline-success"
+                                    size="sm"
+                                    className="me-2"
+                                    onClick={() =>
+                                      setIsQualificationDialogOpen(true)
+                                    }
+                                  >
+                                    Qualifier
+                                  </Button>
+
+                                  <Button variant="outline-danger" size="sm">
+                                    Supprimer
+                                  </Button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <Modal
+                      show={isConsultationDialogOpen}
+                      onHide={() => setIsConsultationDialogOpen(false)}
+                      centered
+                    >
+                      <Modal.Header closeButton>
+                        <Modal.Title>Détails du surveillant</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        {selectedSurveillantForConsultation && (
+                          <>
+                            <div className="mb-3">
+                              <strong>Type :</strong>{" "}
+                              {selectedSurveillantForConsultation.type}
+                            </div>
+                            <div className="mb-3">
+                              <strong>Nom :</strong>{" "}
+                              {selectedSurveillantForConsultation.surveillant}
+                            </div>
+                            <div className="mt-3">
+                              <strong>Documents :</strong>
+                              <div className="mt-2 p-2 border bg-light">
+                                Rapport d'inspection (1.2 MB)
+                              </div>
+                            </div>
+                          </>
+                        )}
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button
+                          variant="secondary"
+                          onClick={() => setIsConsultationDialogOpen(false)}
+                        >
+                          Fermer
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+
+                    <Modal
+                      show={isQualificationDialogOpen}
+                      onHide={() => setIsQualificationDialogOpen(false)}
+                      centered
+                    >
+                      <Modal.Header closeButton>
+                        <Modal.Title>Formulaire de qualification</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Date de qualification</Form.Label>
+                          <Form.Control
+                            type="date"
+                            value={qualificationForm.dateQualification}
+                            onChange={(e) =>
+                              setQualificationForm((prev) => ({
+                                ...prev,
+                                dateQualification: e.target.value,
+                              }))
+                            }
+                          />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                          <Form.Label>Commande</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Référence de commande"
+                            value={qualificationForm.commande}
+                            onChange={(e) =>
+                              setQualificationForm((prev) => ({
+                                ...prev,
+                                commande: e.target.value,
+                              }))
+                            }
+                          />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                          <Form.Label>Commentaire</Form.Label>
+                          <Form.Control
+                            as="textarea"
+                            rows={3}
+                            placeholder="Commentaires sur la qualification"
+                            value={qualificationForm.commentaire}
+                            onChange={(e) =>
+                              setQualificationForm((prev) => ({
+                                ...prev,
+                                commentaire: e.target.value,
+                              }))
+                            }
+                          />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Pièce jointe</Form.Label>
+                          <Form.Control
+                            type="file"
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                              if (e.target.files && e.target.files[0]) {
+                                setQualificationForm((prev) => ({
+                                  ...prev,
+                                  pieceJointe: e.target.files![0],
+                                }));
+                              }
+                            }}
+                          />
+                        </Form.Group>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button
+                          variant="secondary"
+                          onClick={() => setIsQualificationDialogOpen(false)}
+                        >
+                          Annuler
+                        </Button>
+                        <Button
+                          variant="primary"
+                          onClick={handleQualificationSubmit}
+                        >
+                          Enregistrer
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+                  </div>
+                )}
+
+                {activeTab === "autorisation" && (
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-medium">
+                      Autorisation de transfert des commandes
+                    </h3>
+
+                    <div className="space-y-4">
+                      <h4 className="text-md font-medium">
+                        Liste des commandes
+                      </h4>
+
+                      <div className="table-responsive">
+                        <table className="table table-bordered">
+                          <thead>
+                            <tr>
+                              <th>N° Commande</th>
+                              <th>Qualité</th>
+                              <th>Quantité</th>
+                              <th>Autorisation Transfert</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {commandes.map((commande) => (
+                              <tr key={commande.id}>
+                                <td>{commande.id}</td>
+                                <td>{commande.qualite}</td>
+                                <td>{commande.quantite}</td>
+                                <td>
+                                  {commande.autorise ? (
+                                    <span className="badge bg-success">
+                                      Autorisé
+                                    </span>
+                                  ) : (
+                                    <Button
+                                      size="sm"
+                                      className="bg-dark text-white"
+                                      onClick={() =>
+                                        handleOpenAutoriserDialog(commande.id)
+                                      }
+                                    >
+                                      Autoriser
+                                    </Button>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <Modal
+                      show={isAutoriserDialogOpen}
+                      onHide={() => setIsAutoriserDialogOpen(false)}
+                      centered
+                    >
+                      <Modal.Header closeButton>
+                        <Modal.Title>Confirmer l'autorisation</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        Êtes-vous sûr de vouloir autoriser le transfert de cette
+                        commande ?
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button
+                          variant="secondary"
+                          onClick={() => setIsAutoriserDialogOpen(false)}
+                        >
+                          Annuler
+                        </Button>
+                        <Button
+                          variant="primary"
+                          onClick={handleAutoriserCommande}
+                        >
+                          Confirmer
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+                  </div>
+                )}
+
+                {activeTab === "procedure" && (
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-medium">Procédure Portuaire</h3>
+
+                    <div className="space-y-6">
+                      <div className="row">
+                        <div className="col-md-4">
+                          <Form.Label htmlFor="numeroDUM">N° D.U.M.</Form.Label>
+                          <Form.Control
+                            id="numeroDUM"
+                            name="numeroDUM"
+                            value={procedureForm.numeroDUM}
+                            onChange={handleProcedureInputChange}
+                            placeholder="Ex: DUM-2025-12345"
+                          />
+                        </div>
+                        <div className="col-md-4">
+                          <Form.Label>Date D.U.M.</Form.Label>
+                          <Form.Control
+                            type="date"
+                            value={procedureForm.dateDUM}
+                            onChange={(e) =>
+                              handleProcedureDateChange(
+                                "dateDUM",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="col-md-4">
+                          <Form.Label htmlFor="tauxCharge">
+                            Taux Charge
+                          </Form.Label>
+                          <Form.Control
+                            id="tauxCharge"
+                            name="tauxCharge"
+                            value={procedureForm.tauxCharge}
+                            onChange={handleProcedureInputChange}
+                            placeholder="Ex: 5000 tonnes/jour"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="row mt-3">
+                        <div className="col-md-4">
+                          <Form.Label>Date Notice of Readiness</Form.Label>
+                          <Form.Control
+                            type="date"
+                            value={procedureForm.dateNOR}
+                            onChange={(e) =>
+                              handleProcedureDateChange(
+                                "dateNOR",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="col-md-4">
+                          <Form.Label htmlFor="heureNOR">
+                            Heure Notice of Readiness
+                          </Form.Label>
+                          <Form.Control
+                            id="heureNOR"
+                            name="heureNOR"
+                            type="time"
+                            value={procedureForm.heureNOR}
+                            onChange={handleProcedureInputChange}
+                          />
+                        </div>
+                        <div className="col-md-4">
+                          <Form.Label>Date d'accostage du navire</Form.Label>
+                          <Form.Control
+                            type="date"
+                            value={procedureForm.dateAccostageNavire}
+                            onChange={(e) =>
+                              handleProcedureDateChange(
+                                "dateAccostageNavire",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mt-4">
+                        <h4 className="text-md font-medium">Pièces jointes</h4>
+
+                        <div className="row align-items-end mb-3">
+                          <div className="col-md-10">
+                            <Form.Group>
+                              <Form.Label>Type de document</Form.Label>
+                              <Form.Select
+                                name="typeDocument"
+                                value={selectedDocumentType}
+                                onChange={(e) =>
+                                  setSelectedDocumentType(e.target.value)
+                                }
+                              >
+                                <option value="">
+                                  Sélectionner un type de document
+                                </option>
+                                {documentTypesProcedure.map((doc) => (
+                                  <option key={doc.id} value={doc.id}>
+                                    {doc.name}
+                                  </option>
+                                ))}
+                              </Form.Select>
+                            </Form.Group>
+                          </div>
+
+                          <div className="col-md-2">
+                            <Button
+                              style={{
+                                backgroundColor: "#fc5421",
+                                borderColor: "#fc5421",
+                              }}
+                              className="w-100 d-flex align-items-center justify-content-center text-white"
+                              onClick={handleUploadClick}
+                              disabled={selectedDocumentType === ""}
+                            >
+                              Télécharger
+                            </Button>
+                            <Form.Control
+                              type="file"
+                              ref={fileInputRef}
+                              name="document"
+                              style={{ display: "none" }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="d-flex justify-content-end mt-4">
+                        <Button
+                          onClick={handleSaveProcedure}
+                          className="bg-dark text-white"
+                        >
+                          Enregistrer
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "dechargement" && (
+                  <div className="space-y-6">
+                    <div className="d-flex flex-wrap">
+                      <Button
+                        variant="outline"
+                        className="flex items-center gap-2 border-primary text-primary hover:bg-primary/10 me-4 mb-3"
+                      >
+                        <i className="bi bi-calendar"></i>
+                        Consulter le planning de déchargement
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="flex items-center gap-2 border-primary text-primary hover:bg-primary/10 me-4 mb-3"
+                        onClick={() => setIsIncidentDialogOpen(true)}
+                      >
+                        <i className="bi bi-exclamation-circle"></i>
+                        Signaler un incident
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="flex items-center gap-2 border-primary text-primary hover:bg-primary/10 mb-3"
+                      >
+                        <i className="bi bi-ship"></i>
+                        Consulter la situation: Démurrage/Despatch
+                      </Button>
+                    </div>
+
+                    <div className="row mt-4">
+                      <div className="col-md-4">
+                        <Form.Label>Date de début de déchargement</Form.Label>
+                        <Form.Control
+                          type="date"
+                          value={dechargementForm.dateDebut}
+                          onChange={(e) =>
+                            handleDechargementDateChange(
+                              "dateDebut",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <Form.Label>Date de fin de déchargement</Form.Label>
+                        <div className="d-flex align-items-center gap-2">
+                          <Form.Control
+                            type="date"
+                            value={dechargementForm.dateFin}
+                            onChange={(e) =>
+                              handleDechargementDateChange(
+                                "dateFin",
+                                e.target.value
+                              )
+                            }
+                          />
+                          <Button
+                            className=" d-flex align-items-end"
+                            onClick={handleSaveProcedure}
+                          >
+                            Enregistrer
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <h5 className="mt-4">Suivi de déchargement</h5>
+                    <div className="row">
+                      <div className="col-md-3">
+                        <Form.Label>Date</Form.Label>
+                        <Form.Control
+                          type="date"
+                          value={suiviDechargementForm.date}
+                          onChange={(e) =>
+                            handleSuiviDechargementDateChange(e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <Form.Label>Quantité déchargée</Form.Label>
+                        <Form.Control
+                          name="quantiteDechargee"
+                          value={suiviDechargementForm.quantiteDechargee}
+                          onChange={handleSuiviDechargementInputChange}
+                          placeholder="Ex: 300T"
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <Form.Label>Quantité restante</Form.Label>
+                        <Form.Control
+                          name="quantiteRestante"
+                          value={suiviDechargementForm.quantiteRestante}
+                          onChange={handleSuiviDechargementInputChange}
+                          placeholder="Ex: 1700T"
+                        />
+                      </div>
+                      <div className="col-md-3 d-flex align-items-end">
+                        <Button
+                          onClick={handleAddSuiviDechargement}
+                          disabled={
+                            !suiviDechargementForm.date ||
+                            !suiviDechargementForm.quantiteDechargee ||
+                            !suiviDechargementForm.quantiteRestante
+                          }
+                        >
+                          Enregistrer
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="table-responsive mt-4">
+                      <table className="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>Date</th>
+                            <th>Quantité déchargée</th>
+                            <th>Quantité restante</th>
+                            <th className="text-end">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {suiviDechargement.map((item) => (
+                            <tr key={item.id}>
+                              <td>{item.date}</td>
+                              <td>{item.quantiteDechargee}</td>
+                              <td>{item.quantiteRestante}</td>
+                              <td className="text-end">
+                                <Button
+                                  variant="outline-secondary"
+                                  size="sm"
+                                  className="me-2"
+                                >
+                                  Modifier
+                                </Button>
+                                <Button variant="outline-danger" size="sm">
+                                  Supprimer
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+                <Modal
+                  show={isIncidentDialogOpen}
+                  onHide={() => setIsIncidentDialogOpen(false)}
+                  centered
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Signaler un incident</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Type d'incident</Form.Label>
+                      <Form.Select
+                        value={incidentForm.type}
+                        onChange={(e) =>
+                          setIncidentForm((prev) => ({
+                            ...prev,
+                            type: e.target.value,
+                          }))
+                        }
+                      >
+                        <option value="">
+                          Sélectionner un type d'incident
+                        </option>
+                        {typeIncidentOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Date</Form.Label>
+                      <Form.Control
+                        type="date"
+                        value={incidentForm.date || ""}
+                        onChange={(e) =>
+                          setIncidentForm((prev) => ({
+                            ...prev,
+                            date: e.target.value,
+                          }))
+                        }
+                      />
+                    </Form.Group>
+
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <Form.Label>Heure de survenue</Form.Label>
+                        <Form.Control
+                          type="time"
+                          name="heureSurvenue"
+                          value={incidentForm.heureSurvenue}
+                          onChange={handleIncidentInputChange}
+                        />
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <Form.Label>Heure de résolution</Form.Label>
+                        <Form.Control
+                          type="time"
+                          name="heureResolution"
+                          value={incidentForm.heureResolution}
+                          onChange={handleIncidentInputChange}
+                        />
+                      </div>
+                    </div>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Commentaire</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={4}
+                        name="commentaire"
+                        value={incidentForm.commentaire}
+                        onChange={handleIncidentInputChange}
+                        placeholder="Description détaillée de l'incident"
+                      />
+                    </Form.Group>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setIsIncidentDialogOpen(false)}
+                    >
+                      Annuler
+                    </Button>
+                    <Button variant="primary" onClick={handleSubmitIncident}>
+                      Enregistrer
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              </div>
+            </div>
+          </form>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+export default Logistique;

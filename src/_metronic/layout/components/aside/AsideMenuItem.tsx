@@ -25,25 +25,29 @@ const AsideMenuItem: FC<Props & WithChildren> = ({
   const { pathname } = useLocation();
   const isActive = checkIsActive(pathname, to);
 
+ 
   return (
-    <div className={clsx('menu-item', { 'd-none': isCollapsed && !isActive })}>
-      <Link className={clsx('menu-link without-sub', { active: isActive })} to={to}>
+<div className={clsx('menu-item', { 'd-none': isCollapsed && !isActive })}>
+<Link className={clsx('menu-link without-sub', { active: isActive })} to={to}>
         {hasBullet && (
-          <span className="menu-bullet">
-            <span className="bullet bullet-dot"></span>
-          </span>
+<span className="menu-bullet">
+<span className="bullet bullet-dot"></span>
+</span>
         )}
         {icon && (
-          <span className="menu-icon">
-            <KTIcon iconName={icon} className="fs-2" />
-          </span>
+<span className="menu-icon">
+<KTIcon iconName={icon} className="fs-2" />
+</span>
         )}
         {fontIcon && <i className={clsx('bi fs-3', fontIcon)}></i>}
-        <span className="menu-title">{title}</span>
-      </Link>
+<span className="menu-title">{title}</span>
+</Link>
       {children}
-    </div>
+</div>
   );
 };
+ 
 
+
+  
 export { AsideMenuItem };
