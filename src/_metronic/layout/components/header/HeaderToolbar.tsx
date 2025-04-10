@@ -105,6 +105,7 @@ const HeaderToolbar = () => {
                   >
                     <KTIcon iconName="setting-2" className="text-muted fs-1" />
                   </a>
+
               {/* begin::Theme mode */}
               <div className='d-flex align-items-center'>
                 <ThemeModeSwitcher toggleBtnClass='btn btn-sm btn-icon btn-icon-muted btn-active-icon-primary' />

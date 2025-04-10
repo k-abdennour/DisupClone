@@ -29,13 +29,13 @@ export function AsideMenuMain({ isCollapsed = false }: AsideMenuMainProps) {
       >
 
           <AsideMenuItem
-            to="#"
+            to="/addFournisseur"
             icon="plus"
-            title="Création d'un pays"
+            title="Création d'un Fournisseur"
             isCollapsed={isCollapsed}
           />
           <AsideMenuItem
-            to="#"
+            to="/liste_fournisseurs"
             icon="list"
             title="Liste des fournisseurs"
             isCollapsed={isCollapsed}

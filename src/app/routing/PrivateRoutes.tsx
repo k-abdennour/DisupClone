@@ -14,6 +14,7 @@ import Paiement from "../modules/arrivages/Paiement ";
 import Logistique from "../modules/arrivages/Logistique";
 
 
+
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
   const WizardsPage = lazy(() => import("../modules/wizards/WizardsPage"));
@@ -41,6 +42,41 @@ const PrivateRoutes = () => {
         /> */}
 
         {/* <Route path="menu-test" element={<MenuTestPage />} /> */}
+<!--         />
+        <Route
+          path='addFournisseur'
+          element={
+            <SuspensedView>
+              <AddFournisseurPage/>
+            </SuspensedView>
+          }
+        />        
+         <Route
+          path='liste_fournisseurs'
+          element={
+            <SuspensedView>
+              <FournisseurPage/>
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='details_fournisseurs'
+          element={
+            <SuspensedView>
+              <DetailsFournisseurPage/>
+            </SuspensedView>
+          }
+        />
+        <Route
+          path='Modifier_fournisseurs'
+          element={
+            <SuspensedView>
+              <UpdateFournisseurPage/>
+            </SuspensedView>
+          }
+        /> -->
+        
+        <Route path='menu-test' element={<MenuTestPage />} />
         {/* Lazy Modules */}
         {/* <Route
           path="crafted/pages/profile/*"

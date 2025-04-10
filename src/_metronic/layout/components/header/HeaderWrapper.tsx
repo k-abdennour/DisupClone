@@ -16,7 +16,7 @@ export function HeaderWrapper() {
       {...attributes.headerMenu}
     >
       {/* begin::Brand */}
-      <div className='header-brand'>
+      <div className='header-brand '>
         {/* begin::Logo */}
         <Link to='/'>
           <img
