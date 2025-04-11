@@ -20,6 +20,7 @@ interface Arrivage {
   statut: string;
   dateArrivee: string;
   nomNavire?: string;
+  lastDateOfShipment?: string;
 }
 
 interface PaysDataTableProps {
@@ -53,7 +54,9 @@ const ArrivageDataTable: React.FC<PaysDataTableProps> = ({
       }
     };
 
-    return <span className={getBadgeClass(rowData.statut)}>{rowData.statut}</span>;
+    return (
+      <span className={getBadgeClass(rowData.statut)}>{rowData.statut}</span>
+    );
   };
 
   const ActionsTemplate = (rowData: Arrivage) => (
@@ -84,7 +87,10 @@ const ArrivageDataTable: React.FC<PaysDataTableProps> = ({
 
         <Dropdown.Divider />
 
-        <Dropdown.Item className="text-danger" onClick={() => onDelete(rowData.id)}>
+        <Dropdown.Item
+          className="text-danger"
+          onClick={() => onDelete(rowData.id)}
+        >
           <BsTrash className="me-2" /> Supprimer
         </Dropdown.Item>
       </Dropdown.Menu>
@@ -165,14 +171,33 @@ const ArrivageDataTable: React.FC<PaysDataTableProps> = ({
         dataKey="id"
         responsiveLayout="scroll"
       >
-        <Column field="id" header="ID Arrivage" body={(rowData) => <strong>{rowData.id}</strong>} />
+        <Column
+          field="id"
+          header="ID Arrivage"
+          body={(rowData) => <strong>{rowData.id}</strong>}
+        />
         <Column field="commande" header="N° LC" />
         <Column field="fournisseur" header="Fournisseur" />
         <Column field="nomNavire" header="Nom du navire" />
         <Column field="dateCreation" header="Date création" />
         <Column field="tonnage" header="Tonnage" />
         <Column field="statut" header="Statut" body={StatutTemplate} />
-        <Column field="dateArrivee" header="Date arrivée" />
+        <Column field="dateArrivee" header="EDA" />
+        <Column
+          header={<span style={{ color: "red" }}>LDS</span>}
+          body={(rowData: Arrivage) =>
+            rowData.lastDateOfShipment ? (
+              <span>
+                {new Date(rowData.lastDateOfShipment).toLocaleDateString(
+                  "fr-FR"
+                )}
+              </span>
+            ) : (
+              <span className="text-muted fst-italic">Non défini</span>
+            )
+          }
+        />
+
         <Column
           header="Actions"
           body={(rowData) => ActionsTemplate(rowData)}

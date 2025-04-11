@@ -38,7 +38,7 @@ const Card2: FC<Props> = ({
       <div className='card-header border-0 pt-9'>
         <div className='card-title m-0'>
           <div className='symbol symbol-50px w-50px bg-light'>
-            <img src={toAbsoluteUrl(icon)} alt='card2' className='p-3' />
+            <img src={(icon)} alt='card2' className='p-3' />
           </div>
         </div>
 

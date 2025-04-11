@@ -31,7 +31,7 @@ const Card1: FC<Props> = ({
                 {name.charAt(0)}
               </span>
             ) : (
-              <img alt='Pic' src={toAbsoluteUrl(avatar)} />
+              <img alt='Pic' src={(avatar)} />
             )}
             {online && (
               <div className='symbol-badge bg-success start-100 top-100 border-4 h-15px w-15px ms-n3 mt-n3'></div>

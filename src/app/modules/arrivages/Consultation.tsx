@@ -199,6 +199,7 @@ const Consultation: React.FC = () => {
                   </Form.Group>
                 </Col>
               </Row>
+
               {/* Accordéon React-Bootstrap */}
               <Accordion className="mt-4">
                 <Accordion.Item eventKey="0">
@@ -454,6 +455,135 @@ const Consultation: React.FC = () => {
                   </Accordion.Body>
                 </Accordion.Item>
               </Accordion>
+              {/* ⬇️ Bloc Informations du contrat (transformé depuis ton autre composant) */}
+              <div>
+                <h1 className="card-header-title mb-1 mt-5">
+                  Informations du contrat
+                </h1>
+              </div>
+              <Row className="mb-3 mt-4">
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>Date limite de chargement *</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name="dateLimiteChargement"
+                      value={formData.dateLimiteChargement || ""}
+                      onChange={handleChange}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>Taux de déchargement *</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="tauxDechargement"
+                      value={formData.tauxDechargement || ""}
+                      onChange={handleChange}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row className="mb-3">
+                <Col md={2}>
+                  <Form.Check
+                    type="checkbox"
+                    label="Half Dispatch"
+                    name="halfDispatch"
+                    checked={formData.halfDispatch || false}
+                    onChange={(e) =>
+                      setFormData((prev: any) => ({
+                        ...prev,
+                        halfDispatch: e.target.checked,
+                      }))
+                    }
+                  />
+                </Col>
+                <Col md={2}>
+                  <Form.Check
+                    type="checkbox"
+                    label="Demurrage"
+                    name="demurrage"
+                    checked={formData.demurrage || false}
+                    onChange={(e) =>
+                      setFormData((prev: any) => ({
+                        ...prev,
+                        demurrage: e.target.checked,
+                      }))
+                    }
+                  />
+                </Col>
+              </Row>
+
+              <Row className="mb-3">
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>Port de chargement</Form.Label>
+                    <Form.Select
+                      name="portChargement"
+                      value={formData.portChargement || ""}
+                      onChange={handleChange}
+                    >
+                      <option value="">Sélectionner un port</option>
+                      <option value="Casablanca">Casablanca</option>
+                      <option value="Jorf Lasfar">Jorf Lasfar</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              {/* Téléversement de document */}
+              <Row className="mb-3 align-items-end">
+                <Col md={10}>
+                  <Form.Group>
+                    <Form.Label>Type de document</Form.Label>
+                    <Form.Select
+                      name="typeDocumentContrat"
+                      value={formData.typeDocumentContrat || ""}
+                      onChange={handleChange}
+                    >
+                      <option value="">Sélectionner un type de document</option>
+                      <option value="facture">Facture proforma</option>
+                      <option value="contrat">Contrat</option>
+                      <option value="lc">
+                        Demande LC / Engagement d'import
+                      </option>
+                      <option value="licence">Licence d'import</option>
+                      <option value="radio">Certificat non-radioactif</option>
+                      <option value="explosif">Certificat non-explosif</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+
+                <Col md={2}>
+                  <Button
+                    style={{
+                      backgroundColor: "#fc5421",
+                      borderColor: "#fc5421",
+                    }}
+                    className="w-100 d-flex align-items-center justify-content-center text-white"
+                    onClick={() =>
+                      document.getElementById("uploadDoc")?.click()
+                    }
+                    disabled={!formData.typeDocumentContrat}
+                  >
+                    <i className="bi bi-upload me-2"></i> Télécharger
+                  </Button>
+                  <Form.Control
+                    type="file"
+                    id="uploadDoc"
+                    name="documentContrat"
+                    style={{ display: "none" }}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      console.log("📄 Document uploadé :", e.target.files?.[0])
+                    }
+                  />
+                </Col>
+              </Row>
 
               <div className="text-end mb-3 mt-7">
                 <Button variant="primary">Enregistrer les modifications</Button>

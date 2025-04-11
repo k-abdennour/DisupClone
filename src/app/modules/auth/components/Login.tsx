@@ -80,7 +80,7 @@ export function Login() {
           >
             <img
               alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/google-icon.svg')}
+              src={'./media/svg/brand-logos/google-icon.svg'}
               className='h-15px me-3'
             />
             Sign in with Google
@@ -98,12 +98,12 @@ export function Login() {
           >
             <img
               alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black.svg')}
+              src={'/media/svg/brand-logos/apple-black.svg'}
               className='theme-light-show h-15px me-3'
             />
             <img
               alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black-dark.svg')}
+              src={'/media/svg/brand-logos/apple-black-dark.svg'}
               className='theme-dark-show h-15px me-3'
             />
             Sign in with Apple
@@ -120,7 +120,7 @@ export function Login() {
       </div>
       {/* end::Separator */}
 
-      {formik.status ? (
+      {/* {formik.status ? (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
@@ -131,7 +131,7 @@ export function Login() {
             continue.
           </div>
         </div>
-      )}
+      )} */}
 
       {/* begin::Form group */}
       <div className='fv-row mb-8'>

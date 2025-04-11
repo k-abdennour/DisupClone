@@ -11,7 +11,8 @@ interface Arrivage {
   tonnage: string;
   statut: string;
   dateArrivee: string;
-  nomNavire: string; 
+  nomNavire: string;
+  lastDateOfShipment?: string; // ✅ ajouté ici
 }
 
 const Arrivage: React.FC = () => {
@@ -32,6 +33,7 @@ const Arrivage: React.FC = () => {
         statut: "En cours",
         dateArrivee: "25/02/2025",
         nomNavire: "Ocean Voyage",
+        lastDateOfShipment: "29/02/2025",
       },
       {
         id: "ARR-2025-002",
@@ -42,7 +44,7 @@ const Arrivage: React.FC = () => {
         statut: "Planifié",
         dateArrivee: "10/03/2025",
         nomNavire: "Sea Horizon",
-
+        lastDateOfShipment: "05/03/2025",
       },
       {
         id: "ARR-2025-003",
@@ -53,7 +55,7 @@ const Arrivage: React.FC = () => {
         statut: "En transit",
         dateArrivee: "05/03/2025",
         nomNavire: "Iron Pearl",
-
+        lastDateOfShipment: "28/02/2025",
       },
       {
         id: "ARR-2025-004",
@@ -64,7 +66,7 @@ const Arrivage: React.FC = () => {
         statut: "Planifié",
         dateArrivee: "15/03/2025",
         nomNavire: "Global Titan",
-
+        lastDateOfShipment: "10/03/2025",
       },
       {
         id: "ARR-2025-005",
@@ -75,7 +77,7 @@ const Arrivage: React.FC = () => {
         statut: "En cours",
         dateArrivee: "30/03/2025",
         nomNavire: "Metal Queen",
-
+        lastDateOfShipment: "25/03/2025",
       },
     ];
 
@@ -139,7 +141,10 @@ const Arrivage: React.FC = () => {
         <div>
           <h2 className="page-title mb-1">Liste des arrivages</h2>
         </div>
-        <button className="btn btn-primary btn-add-arrivage" onClick={handleAddArrivageClick}>
+        <button
+          className="btn btn-primary btn-add-arrivage"
+          onClick={handleAddArrivageClick}
+        >
           <span>➕</span> <span>Nouvel arrivage</span>
         </button>
       </div>
@@ -147,7 +152,9 @@ const Arrivage: React.FC = () => {
       {/* ✅ Carte contenant tout le bloc */}
       <div className="card border-0 shadow-sm rounded-3 p-4">
         <h5 className="card-header-title mb-1">Arrivages</h5>
-        <p className="card-header-subtitle mb-4">Liste des arrivages de ferraille importée</p>
+        <p className="card-header-subtitle mb-4">
+          Liste des arrivages de ferraille importée
+        </p>
 
         {/* ✅ Formulaire de recherche */}
         <ArrivageSearchForm onSearch={handleSearch} translate={translate} />

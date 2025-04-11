@@ -124,12 +124,12 @@ export function Registration() {
           >
             <img
               alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black.svg')}
+              src={'/media/svg/brand-logos/apple-black.svg'}
               className='theme-light-show h-15px me-3'
             />
             <img
               alt='Logo'
-              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black-dark.svg')}
+              src={'/media/svg/brand-logos/apple-black-dark.svg'}
               className='theme-dark-show h-15px me-3'
             />
             Sign in with Apple

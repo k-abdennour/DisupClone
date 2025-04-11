@@ -3,21 +3,20 @@ import { Button, Card } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface ArrivageData {
-    description: string;
-    proformaInvoiceNumber: string;
-    proformaInvoiceDate: string;
-    country: string;
-    supplier: string;
-    currency: string;
-    totalTonnage: number;
-    tonnageTolerance: number;
-    bookingDate: string;
-    prixUnitaireFinal: number;
-    coutFinancement: number;
-    delaiPaiement: string;
-    fret: number;
-  }
-  
+  description: string;
+  proformaInvoiceNumber: string;
+  proformaInvoiceDate: string;
+  country: string;
+  supplier: string;
+  currency: string;
+  totalTonnage: number;
+  tonnageTolerance: number;
+  bookingDate: string;
+  prixUnitaireFinal: number;
+  coutFinancement: number;
+  delaiPaiement: string;
+  fret: number;
+}
 
 const Paiement: React.FC = () => {
   const navigate = useNavigate();
@@ -34,6 +33,24 @@ const Paiement: React.FC = () => {
   const [reclamationType, setReclamationType] = useState("");
   const [reclamationAmount, setReclamationAmount] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
+  const [reclamations, setReclamations] = useState<
+    { type: string; amount: string; isTreated: boolean }[]
+  >([]);
+  const handleAddReclamation = () => {
+    if (reclamationType && reclamationAmount) {
+      setReclamations((prev) => [
+        ...prev,
+        { type: reclamationType, amount: reclamationAmount, isTreated: false },
+      ]);
+      setReclamationType("");
+      setReclamationAmount("");
+    }
+  };
+  const handleMarkAsTreated = (index: number) => {
+    setReclamations((prev) =>
+      prev.map((rec, i) => (i === index ? { ...rec, isTreated: true } : rec))
+    );
+  };
 
   const BANK_OPTIONS = [
     "Attijariwafa Bank",
@@ -54,21 +71,20 @@ const Paiement: React.FC = () => {
 
   useEffect(() => {
     setArrivage({
-        description: "Arrivage de ferraille E1 et E2",
-        proformaInvoiceNumber: "FP-2025-0458",
-        proformaInvoiceDate: "2025-01-10",
-        country: "France",
-        supplier: "ArcelorMittal",
-        currency: "EUR",
-        totalTonnage: 2000,
-        tonnageTolerance: 5,
-        bookingDate: "2025-01-20",
-        prixUnitaireFinal: 450,
-        coutFinancement: 20000,
-        delaiPaiement: "60 jours",
-        fret: 30000,
-      });
-      
+      description: "Arrivage de ferraille E1 et E2",
+      proformaInvoiceNumber: "FP-2025-0458",
+      proformaInvoiceDate: "2025-01-10",
+      country: "France",
+      supplier: "ArcelorMittal",
+      currency: "EUR",
+      totalTonnage: 2000,
+      tonnageTolerance: 5,
+      bookingDate: "2025-01-20",
+      prixUnitaireFinal: 450,
+      coutFinancement: 20000,
+      delaiPaiement: "60 jours",
+      fret: 30000,
+    });
   }, [id]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -106,32 +122,117 @@ const Paiement: React.FC = () => {
           <h2 className="mt-4">Informations de paiement</h2>
           <form onSubmit={handleSubmit}>
             <div className="row mb-3">
-              <div className="col-md-6"><label>Description</label><input className="form-control" value={arrivage.description} disabled /></div>
-              <div className="col-md-6"><label>Numéro Facture Proforma</label><input className="form-control" value={arrivage.proformaInvoiceNumber} disabled /></div>
+              <div className="col-md-6">
+                <label>Description</label>
+                <input
+                  className="form-control"
+                  value={arrivage.description}
+                  disabled
+                />
+              </div>
+              <div className="col-md-6">
+                <label>Numéro Facture Proforma</label>
+                <input
+                  className="form-control"
+                  value={arrivage.proformaInvoiceNumber}
+                  disabled
+                />
+              </div>
             </div>
             <div className="row mb-3">
-              <div className="col-md-4"><label>Pays</label><input className="form-control" value={arrivage.country} disabled /></div>
-              <div className="col-md-4"><label>Fournisseur</label><input className="form-control" value={arrivage.supplier} disabled /></div>
-              <div className="col-md-4"><label>Devise</label><input className="form-control" value={arrivage.currency} disabled /></div>
+              <div className="col-md-4">
+                <label>Pays</label>
+                <input
+                  className="form-control"
+                  value={arrivage.country}
+                  disabled
+                />
+              </div>
+              <div className="col-md-4">
+                <label>Fournisseur</label>
+                <input
+                  className="form-control"
+                  value={arrivage.supplier}
+                  disabled
+                />
+              </div>
+              <div className="col-md-4">
+                <label>Devise</label>
+                <input
+                  className="form-control"
+                  value={arrivage.currency}
+                  disabled
+                />
+              </div>
             </div>
             <div className="row mb-3">
-              <div className="col-md-4"><label>Tonnage Total</label><input className="form-control" value={arrivage.totalTonnage} disabled /></div>
-              <div className="col-md-4"><label>Tolérance</label><input className="form-control" value={arrivage.tonnageTolerance} disabled /></div>
-              <div className="col-md-4"><label>Prix unitaire final</label><input className="form-control" value={arrivage.prixUnitaireFinal} disabled /></div>
+              <div className="col-md-4">
+                <label>Tonnage Total</label>
+                <input
+                  className="form-control"
+                  value={arrivage.totalTonnage}
+                  disabled
+                />
+              </div>
+              <div className="col-md-4">
+                <label>Tolérance</label>
+                <input
+                  className="form-control"
+                  value={arrivage.tonnageTolerance}
+                  disabled
+                />
+              </div>
+              <div className="col-md-4">
+                <label>Prix unitaire final</label>
+                <input
+                  className="form-control"
+                  value={arrivage.prixUnitaireFinal}
+                  disabled
+                />
+              </div>
             </div>
             <div className="row mb-3">
-              <div className="col-md-4"><label>Coût de financement</label><input className="form-control" value={arrivage.coutFinancement} disabled /></div>
-              <div className="col-md-4"><label>Délai de paiement</label><input className="form-control" value={arrivage.delaiPaiement} disabled /></div>
-              <div className="col-md-4"><label>Fret (Prix en Devise)</label><input className="form-control" value={arrivage.fret} disabled /></div>
+              <div className="col-md-4">
+                <label>Coût de financement</label>
+                <input
+                  className="form-control"
+                  value={arrivage.coutFinancement}
+                  disabled
+                />
+              </div>
+              <div className="col-md-4">
+                <label>Délai de paiement</label>
+                <input
+                  className="form-control"
+                  value={arrivage.delaiPaiement}
+                  disabled
+                />
+              </div>
+              <div className="col-md-4">
+                <label>Fret (Prix en Devise)</label>
+                <input
+                  className="form-control"
+                  value={arrivage.fret}
+                  disabled
+                />
+              </div>
             </div>
 
             {/* Onglets */}
             <div className="d-flex gap-2 border-bottom pb-2 mt-4">
-              {[{ id: "banque", label: "Nomination de la banque" }, { id: "swift", label: "Swift" }, { id: "reclamation", label: "Réclamation" }].map((tab) => (
+              {[
+                { id: "banque", label: "Nomination de la banque" },
+                { id: "swift", label: "Swift" },
+                { id: "reclamation", label: "Réclamation" },
+              ].map((tab) => (
                 <button
                   type="button"
                   key={tab.id}
-                  className={`btn btn-sm ${activeTab === tab.id ? "btn-primary" : "btn-outline-secondary"}`}
+                  className={`btn btn-sm ${
+                    activeTab === tab.id
+                      ? "btn-primary"
+                      : "btn-outline-secondary"
+                  }`}
                   onClick={() => setActiveTab(tab.id)}
                 >
                   {tab.label}
@@ -144,16 +245,26 @@ const Paiement: React.FC = () => {
                 <>
                   <div className="mb-3">
                     <label>Banque</label>
-                    <select className="form-select" value={bank} onChange={(e) => setBank(e.target.value)}>
+                    <select
+                      className="form-select"
+                      value={bank}
+                      onChange={(e) => setBank(e.target.value)}
+                    >
                       <option value="">-- Sélectionnez une banque --</option>
-                      <option value="Attijariwafa Bank">Attijariwafa Bank</option>
+                      <option value="Attijariwafa Bank">
+                        Attijariwafa Bank
+                      </option>
                       <option value="BMCE">BMCE</option>
                       <option value="Banque Populaire">Banque Populaire</option>
                     </select>
                   </div>
                   <div className="mb-3">
                     <label>Compte bancaire</label>
-                    <input className="form-control" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
+                    <input
+                      className="form-control"
+                      value={accountNumber}
+                      onChange={(e) => setAccountNumber(e.target.value)}
+                    />
                   </div>
                 </>
               )}
@@ -163,7 +274,11 @@ const Paiement: React.FC = () => {
                   <div className="row mb-3">
                     <div className="col-md-4">
                       <label>Type de paiement</label>
-                      <select className="form-select" value={paymentMode} onChange={(e) => setPaymentMode(e.target.value)}>
+                      <select
+                        className="form-select"
+                        value={paymentMode}
+                        onChange={(e) => setPaymentMode(e.target.value)}
+                      >
                         <option value="">-- Sélectionnez --</option>
                         <option value="LC">Lettre de Crédit</option>
                         <option value="Transfert">Transfert</option>
@@ -171,20 +286,43 @@ const Paiement: React.FC = () => {
                     </div>
                     <div className="col-md-4">
                       <label>Date dépôt LC</label>
-                      <input type="date" className="form-control" value={swiftDate} onChange={(e) => setSwiftDate(e.target.value)} />
+                      <input
+                        type="date"
+                        className="form-control"
+                        value={swiftDate}
+                        onChange={(e) => setSwiftDate(e.target.value)}
+                      />
                     </div>
                     <div className="col-md-4">
                       <label>Numéro Swift</label>
-                      <input className="form-control" value={swiftRef} onChange={(e) => setSwiftRef(e.target.value)} />
+                      <input
+                        className="form-control"
+                        value={swiftRef}
+                        onChange={(e) => setSwiftRef(e.target.value)}
+                      />
                     </div>
                   </div>
                   <div className="mb-3">
                     <label>Fichier Swift</label>
-                    <input type="file" className="form-control" multiple onChange={handleFileChange} />
+                    <input
+                      type="file"
+                      className="form-control"
+                      multiple
+                      onChange={handleFileChange}
+                    />
                     {attachments.length > 0 && (
                       <ul className="list-unstyled mt-2">
                         {attachments.map((file, idx) => (
-                          <li key={idx}>{file.name} <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => handleRemoveFile(idx)}>Supprimer</button></li>
+                          <li key={idx}>
+                            {file.name}{" "}
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-danger"
+                              onClick={() => handleRemoveFile(idx)}
+                            >
+                              Supprimer
+                            </button>
+                          </li>
                         ))}
                       </ul>
                     )}
@@ -197,7 +335,11 @@ const Paiement: React.FC = () => {
                   <div className="row mb-3">
                     <div className="col-md-6">
                       <label>Type de réclamation</label>
-                      <select className="form-select" value={reclamationType} onChange={(e) => setReclamationType(e.target.value)}>
+                      <select
+                        className="form-select"
+                        value={reclamationType}
+                        onChange={(e) => setReclamationType(e.target.value)}
+                      >
                         <option value="">-- Sélectionnez --</option>
                         <option value="poids">Poids</option>
                         <option value="qualite">Qualité</option>
@@ -207,16 +349,70 @@ const Paiement: React.FC = () => {
                     </div>
                     <div className="col-md-6">
                       <label>Montant de la réclamation</label>
-                      <input className="form-control" value={reclamationAmount} onChange={(e) => setReclamationAmount(e.target.value)} />
+                      <input
+                        className="form-control"
+                        value={reclamationAmount}
+                        onChange={(e) => setReclamationAmount(e.target.value)}
+                      />
                     </div>
                   </div>
+                  <div className="mb-3 text-end">
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary"
+                      onClick={handleAddReclamation}
+                    >
+                      Ajouter la réclamation
+                    </button>
+                  </div>
+                  {/* Liste des réclamations enregistrées */}
+                  {reclamations.length > 0 && (
+                    <div className="mt-4">
+                      <h5>Réclamations enregistrées</h5>
+                      <ul className="list-group">
+                        {reclamations.map((rec, index) => (
+                          <li
+                            key={index}
+                            className="list-group-item d-flex justify-content-between align-items-center"
+                          >
+                            <span>
+                              <strong>Type:</strong> {rec.type} |{" "}
+                              <strong>Montant:</strong> {rec.amount} DH
+                            </span>
+                            <button
+                              type="button"
+                              className={`btn btn-sm ${
+                                rec.isTreated
+                                  ? "btn-success"
+                                  : "btn-outline-success"
+                              }`}
+                              onClick={() => handleMarkAsTreated(index)}
+                              disabled={rec.isTreated}
+                            >
+                              {rec.isTreated
+                                ? "Traité"
+                                : "Marquer comme traité"}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </>
               )}
             </div>
 
             <div className="text-end mt-4">
-              <button type="button" className="btn btn-secondary me-2" onClick={() => navigate(-1)}>Annuler</button>
-              <button type="submit" className="btn btn-primary">Enregistrer le paiement</button>
+              <button
+                type="button"
+                className="btn btn-secondary me-2"
+                onClick={() => navigate(-1)}
+              >
+                Annuler
+              </button>
+              <button type="submit" className="btn btn-primary">
+                Enregistrer le paiement
+              </button>
             </div>
           </form>
         </div>

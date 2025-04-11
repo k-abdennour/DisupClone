@@ -53,9 +53,9 @@ const SearchModal: React.FC<Props> = ({show, handleClose}) => {
                           <div
                             className='overlay-wrapper flex-grow-1 bgi-no-repeat bgi-size-cover bgi-position-center card-rounded'
                             style={{
-                              backgroundImage: `url('${toAbsoluteUrl(
+                              backgroundImage: `url('${
                                 '/media/stock/600x400/img-17.jpg'
-                              )}')`,
+                              }')`,
                             }}
                           />
                           <div className='overlay-layer bg-white bg-opacity-50'>
@@ -70,9 +70,9 @@ const SearchModal: React.FC<Props> = ({show, handleClose}) => {
                           <div
                             className='overlay-wrapper flex-grow-1 bgi-no-repeat bgi-size-cover bgi-position-center card-rounded'
                             style={{
-                              backgroundImage: `url('${toAbsoluteUrl(
+                              backgroundImage: `url('${
                                 '/media/stock/600x400/img-1.jpg'
-                              )}')`,
+                              }')`,
                             }}
                           />
                           <div className='overlay-layer bg-white bg-opacity-50'>
@@ -89,9 +89,9 @@ const SearchModal: React.FC<Props> = ({show, handleClose}) => {
                           <div
                             className='overlay-wrapper flex-grow-1 bgi-no-repeat bgi-size-cover bgi-position-center card-rounded'
                             style={{
-                              backgroundImage: `url('${toAbsoluteUrl(
+                              backgroundImage: `url('${
                                 '/media/stock/600x400/img-23.jpg'
-                              )}')`,
+                              }')`,
                             }}
                           />
                           <div className='overlay-layer bg-white bg-opacity-50'>
@@ -110,9 +110,9 @@ const SearchModal: React.FC<Props> = ({show, handleClose}) => {
                       <div
                         className='overlay-wrapper flex-grow-1 bgi-no-repeat bgi-size-cover bgi-position-center card-rounded'
                         style={{
-                          backgroundImage: `url('${toAbsoluteUrl(
+                          backgroundImage: `url('${
                             '/media/stock/600x400/img-11.jpg'
-                          )}')`,
+                          }')`,
                         }}
                       ></div>
                       <div className='overlay-layer bg-white bg-opacity-50'>

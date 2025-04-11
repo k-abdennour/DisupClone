@@ -7,41 +7,41 @@ const Planning: React.FC = () => {
   const [dateAccostage, setDateAccostage] = useState("");
   const [planningData, setPlanningData] = useState([
     {
-        id: 1,
-        dateDepart: "15/02/2025",
-        dateArrivee: "25/02/2025",
-        dateAccostage: "26/02/2025",
-      },
-      {
-        id: 2,
-        dateDepart: "20/02/2025",
-        dateArrivee: "01/03/2025",
-        dateAccostage: "02/03/2025",
-      },
-      {
-        id: 3,
-        dateDepart: "30/06/2025",
-        dateArrivee: "09/07/2025",
-        dateAccostage: "10/07/2025",
-      },
-      {
-        id: 4,
-        dateDepart: "12/07/2025",
-        dateArrivee: "20/07/2025",
-        dateAccostage: "21/07/2025",
-      },
-      {
-        id: 5,
-        dateDepart: "25/07/2025",
-        dateArrivee: "01/08/2025",
-        dateAccostage: "02/08/2025",
-      },
-      {
-        id: 6,
-        dateDepart: "05/08/2025",
-        dateArrivee: "10/08/2025",
-        dateAccostage: "11/08/2025",
-      },
+      id: 1,
+      dateDepart: "15/02/2025",
+      dateArrivee: "25/02/2025",
+      dateAccostage: "26/02/2025",
+    },
+    {
+      id: 2,
+      dateDepart: "20/02/2025",
+      dateArrivee: "01/03/2025",
+      dateAccostage: "02/03/2025",
+    },
+    {
+      id: 3,
+      dateDepart: "30/06/2025",
+      dateArrivee: "09/07/2025",
+      dateAccostage: "10/07/2025",
+    },
+    {
+      id: 4,
+      dateDepart: "12/07/2025",
+      dateArrivee: "20/07/2025",
+      dateAccostage: "21/07/2025",
+    },
+    {
+      id: 5,
+      dateDepart: "25/07/2025",
+      dateArrivee: "01/08/2025",
+      dateAccostage: "02/08/2025",
+    },
+    {
+      id: 6,
+      dateDepart: "05/08/2025",
+      dateArrivee: "10/08/2025",
+      dateAccostage: "11/08/2025",
+    },
   ]);
 
   const handleAddPlanning = () => {

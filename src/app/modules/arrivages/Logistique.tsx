@@ -177,6 +177,7 @@ const Logistique: React.FC = () => {
       dateFinChargement: "15/02/2025",
       dateDepart: "16/02/2025",
       dateArriveeDecharge: "26/02/2025",
+      montantDemurrage: "15000 DH",
       status: "pending",
     },
     {
@@ -186,6 +187,7 @@ const Logistique: React.FC = () => {
       dateFinChargement: "18/02/2025",
       dateDepart: "19/02/2025",
       dateArriveeDecharge: "01/03/2025",
+      montantDemurrage: "12000 DH",
       status: "pending",
     },
     {
@@ -195,9 +197,11 @@ const Logistique: React.FC = () => {
       dateFinChargement: "20/02/2025",
       dateDepart: "21/02/2025",
       dateArriveeDecharge: "03/03/2025",
+      montantDemurrage: "18000 DH",
       status: "pending",
     },
   ];
+
   const BANK_OPTIONS = [
     "Attijariwafa Bank",
     "BMCE Bank (Bank of Africa)",
@@ -402,6 +406,10 @@ const Logistique: React.FC = () => {
                   { id: "procedure", label: "Procédure Portuaire" },
                   { id: "accostage", label: "Accostage du navire" },
                   { id: "dechargement", label: "Déchargement du navire" },
+                  {
+                    id: "qualification-port",
+                    label: "Qualification au port de déchargement",
+                  }, // ✅ Nouvel onglet
                   { id: "autorisation", label: "Autorisation de Transfert" },
                   { id: "transfert", label: "Transfert au site" },
                 ].map((tab) => (
@@ -436,6 +444,8 @@ const Logistique: React.FC = () => {
                             <th>Date de fin de chargement</th>
                             <th>Date de départ</th>
                             <th>Date d'arrivée au port de déchargement</th>
+                            <th>Montant de démurrage</th>{" "}
+                            {/* ✅ Nouvelle colonne */}
                             <th className="text-end">Actions</th>
                           </tr>
                         </thead>
@@ -447,6 +457,8 @@ const Logistique: React.FC = () => {
                               <td>{navire.dateFinChargement}</td>
                               <td>{navire.dateDepart}</td>
                               <td>{navire.dateArriveeDecharge}</td>
+                              <td>{navire.montantDemurrage}</td>{" "}
+                              {/* ✅ Ici on affiche la vraie donnée */}
                               <td className="text-end">
                                 <Button
                                   variant="outline-success"
@@ -979,7 +991,6 @@ const Logistique: React.FC = () => {
                   </div>
                 )}
 
-
                 {activeTab === "dechargement" && (
                   <div className="space-y-6">
                     <div className="d-flex flex-wrap">
@@ -1124,101 +1135,139 @@ const Logistique: React.FC = () => {
                   </div>
                 )}
 
-{activeTab === "autorisation" && (
-            <div>
-              <h4>Autorisation de Transfert</h4>
-              <Table bordered responsive>
-                <thead>
-                  <tr>
-                    <th>N° Commande</th>
-                    <th>Qualité</th>
-                    <th>Quantité</th>
-                    <th>Tonnage Commande</th>
-                    <th>Tonnage Transféré</th>
-                    <th>Tonnage Restant</th>
-                    <th className="text-end">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>CMD001</td>
-                    <td>Qualité A</td>
-                    <td>300</td>
-                    <td>500</td>
-                    <td>200</td>
-                    <td>300</td>
-                    <td className="text-end">
-                      <Button variant="danger" size="sm">Arrêter</Button>
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
-            </div>
-          )}
-           {activeTab === "transfert" && (
-            <div>
-              <h4>Transfert au site</h4>
-              <Form className="mb-4">
-                <Form.Group className="mb-3">
-                  <Form.Label>Numéro D.U.M.</Form.Label>
-                  <Form.Select>
-                    <option value="">Sélectionner un DUM</option>
-                    <option>DUM-2025-001</option>
-                    <option>DUM-2025-002</option>
-                  </Form.Select>
-                </Form.Group>
+                {activeTab === "qualification-port" && (
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-medium">
+                      Qualification au port de déchargement
+                    </h3>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Commande</Form.Label>
-                  <Form.Select>
-                    <option value="">Sélectionner une commande</option>
-                    <option>CMD001</option>
-                    <option>CMD002</option>
-                  </Form.Select>
-                </Form.Group>
+                    <div className="row align-items-end mb-3">
+                      <div className="col-md-10">
+                        <Form.Group>
+                          <Form.Label>Rapport de qualification</Form.Label>
+                          <Form.Control
+                            type="file"
+                            onChange={handleFileChange}
+                          />
+                        </Form.Group>
+                      </div>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Matricule Camion</Form.Label>
-                  <Form.Control type="text" placeholder="Ex: 12345-A-01" />
-                </Form.Group>
+                      <div className="col-md-2">
+                        <Button
+                          style={{
+                            backgroundColor: "#fc5421",
+                            borderColor: "#fc5421",
+                          }}
+                          className="w-100 d-flex align-items-center justify-content-center text-white"
+                          onClick={() => alert("Rapport téléchargé")}
+                          disabled={attachments.length === 0}
+                        >
+                          Télécharger
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {activeTab === "autorisation" && (
+                  <div>
+                    <h4>Autorisation de Transfert</h4>
+                    <Table bordered responsive>
+                      <thead>
+                        <tr>
+                          <th>N° Commande</th>
+                          <th>Qualité</th>
+                          <th>Quantité</th>
+                          <th>Tonnage Commande</th>
+                          <th>Tonnage Transféré</th>
+                          <th>Tonnage Restant</th>
+                          <th className="text-end">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>CMD001</td>
+                          <td>Qualité A</td>
+                          <td>300</td>
+                          <td>500</td>
+                          <td>200</td>
+                          <td>300</td>
+                          <td className="text-end">
+                            <Button variant="danger" size="sm">
+                              Arrêter
+                            </Button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                )}
+                {activeTab === "transfert" && (
+                  <div>
+                    <h4>Transfert au site</h4>
+                    <Form className="mb-4">
+                      <Form.Group className="mb-3">
+                        <Form.Label>Numéro D.U.M.</Form.Label>
+                        <Form.Select>
+                          <option value="">Sélectionner un DUM</option>
+                          <option>DUM-2025-001</option>
+                          <option>DUM-2025-002</option>
+                        </Form.Select>
+                      </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Prestataire de chargement</Form.Label>
-                  <Form.Select>
-                    <option value="">Sélectionner un prestataire</option>
-                    <option>Transport BENAISSA</option>
-                    <option>TRANS CARGOS</option>
-                  </Form.Select>
-                </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Commande</Form.Label>
+                        <Form.Select>
+                          <option value="">Sélectionner une commande</option>
+                          <option>CMD001</option>
+                          <option>CMD002</option>
+                        </Form.Select>
+                      </Form.Group>
 
-                <div className="text-end">
-                  <Button variant="primary">Enregistrer</Button>
-                </div>
-              </Form>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Matricule Camion</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Ex: 12345-A-01"
+                        />
+                      </Form.Group>
 
-              <h5>Historique des transferts</h5>
-              <Table bordered responsive>
-                <thead>
-                  <tr>
-                    <th>DUM</th>
-                    <th>Commande</th>
-                    <th>Matricule Camion</th>
-                    <th>Prestataire</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>DUM-2025-001</td>
-                    <td>CMD001</td>
-                    <td>12345-A-01</td>
-                    <td>Transport BENAISSA</td>
-                    <td>2025-04-10</td>
-                  </tr>
-                </tbody>
-              </Table>
-            </div>
-          )}
+                      <Form.Group className="mb-3">
+                        <Form.Label>Prestataire de chargement</Form.Label>
+                        <Form.Select>
+                          <option value="">Sélectionner un prestataire</option>
+                          <option>Transport BENAISSA</option>
+                          <option>TRANS CARGOS</option>
+                        </Form.Select>
+                      </Form.Group>
+
+                      <div className="text-end">
+                        <Button variant="primary">Enregistrer</Button>
+                      </div>
+                    </Form>
+
+                    <h5>Historique des transferts</h5>
+                    <Table bordered responsive>
+                      <thead>
+                        <tr>
+                          <th>DUM</th>
+                          <th>Commande</th>
+                          <th>Matricule Camion</th>
+                          <th>Prestataire</th>
+                          <th>Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>DUM-2025-001</td>
+                          <td>CMD001</td>
+                          <td>12345-A-01</td>
+                          <td>Transport BENAISSA</td>
+                          <td>2025-04-10</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                )}
                 <Modal
                   show={isIncidentDialogOpen}
                   onHide={() => setIsIncidentDialogOpen(false)}

@@ -13,7 +13,8 @@ const ArrivageSearchForm: React.FC<SearchFormProps> = ({
   return (
     <div className="card-body">
       {/* CSS intégré avec champs plus grands */}
-      <style>{`
+      <style>
+        {`
         .search-form .form-control,
         .search-form .form-select {
             border-radius: 12px;
@@ -66,7 +67,7 @@ const ArrivageSearchForm: React.FC<SearchFormProps> = ({
             }
         }
         `}
-        </style>
+      </style>
 
       <Formik
         initialValues={{ searchTerm: "", status: "", view: "" }}
