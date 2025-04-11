@@ -5,6 +5,7 @@ import { Row, Col, Form, Button, Card, Accordion } from "react-bootstrap";
 const Consultation: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [uploadedDocuments, setUploadedDocuments] = useState<File[]>([]);
 
   const [formData, setFormData] = useState<any>({
     description: "",
@@ -563,7 +564,7 @@ const Consultation: React.FC = () => {
                   <Button
                     style={{
                       backgroundColor: "#fc5421",
-                      borderColor: "#fc5421",
+                      borderColor: "#dc3545",
                     }}
                     className="w-100 d-flex align-items-center justify-content-center text-white"
                     onClick={() =>
@@ -573,14 +574,48 @@ const Consultation: React.FC = () => {
                   >
                     <i className="bi bi-upload me-2"></i> Télécharger
                   </Button>
+                  {uploadedDocuments.length > 0 && (
+                    <div className="mt-4">
+                      <h6 className="fw-bold mb-3">Documents téléchargés</h6>
+                      {uploadedDocuments.map((file, index) => (
+                        <div
+                          key={index}
+                          className="d-flex align-items-center justify-content-between px-3 py-2 mb-2 rounded bg-light border"
+                        >
+                          <div>
+                            <div className="fw-bold">Contrat</div>
+                            <div className="text-muted small">
+                              {file.name} (
+                              {(file.size / 1024 / 1024).toFixed(2)} MB)
+                            </div>
+                          </div>
+                          <Button
+                            variant="link"
+                            className="text-danger p-0"
+                            onClick={() =>
+                              setUploadedDocuments((prev) =>
+                                prev.filter((_, i) => i !== index)
+                              )
+                            }
+                          >
+                            <i className="bi bi-trash-fill fs-5"></i>
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <Form.Control
                     type="file"
                     id="uploadDoc"
                     name="documentContrat"
                     style={{ display: "none" }}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      console.log("📄 Document uploadé :", e.target.files?.[0])
-                    }
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      if (e.target.files && e.target.files.length > 0) {
+                        const file = e.target.files[0];
+                        setUploadedDocuments((prev) => [...prev, file]);
+                      }
+                    }}
                   />
                 </Col>
               </Row>

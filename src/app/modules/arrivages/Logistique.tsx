@@ -786,7 +786,6 @@ const Logistique: React.FC = () => {
                     </Modal>
                   </div>
                 )}
-
                 {activeTab === "procedure" && (
                   <div className="space-y-6">
                     <h3 className="text-lg font-medium">Procédure Portuaire</h3>
@@ -930,9 +929,39 @@ const Logistique: React.FC = () => {
                               ref={fileInputRef}
                               name="document"
                               style={{ display: "none" }}
+                              onChange={handleFileChange}
                             />
                           </div>
                         </div>
+
+                        {/* 🧾 AFFICHAGE DES DOCUMENTS TÉLÉCHARGÉS */}
+                        {attachments.length > 0 && (
+                          <div className="mt-4">
+                            <h6 className="fw-bold mb-3">
+                              Documents téléchargés
+                            </h6>
+                            {attachments.map((file, index) => (
+                              <div
+                                key={index}
+                                className="d-flex align-items-center justify-content-between px-3 py-2 mb-2 rounded bg-light border"
+                              >
+                                <div>
+                                  <div className="fw-bold">{file.name}</div>
+                                  <div className="text-muted small">
+                                    {(file.size / 1024 / 1024).toFixed(2)} MB
+                                  </div>
+                                </div>
+                                <Button
+                                  variant="link"
+                                  className="text-danger p-0"
+                                  onClick={() => handleRemoveFile(index)}
+                                >
+                                  <i className="bi bi-trash-fill fs-5"></i>
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       <div className="d-flex justify-content-end mt-4">
@@ -1166,6 +1195,33 @@ const Logistique: React.FC = () => {
                         </Button>
                       </div>
                     </div>
+
+                    {/* 🧾 AFFICHAGE DES DOCUMENTS TÉLÉCHARGÉS */}
+                    {attachments.length > 0 && (
+                      <div className="mt-4">
+                        <h6 className="fw-bold mb-3">Documents téléchargés</h6>
+                        {attachments.map((file, index) => (
+                          <div
+                            key={index}
+                            className="d-flex align-items-center justify-content-between px-3 py-2 mb-2 rounded bg-light border"
+                          >
+                            <div>
+                              <div className="fw-bold">{file.name}</div>
+                              <div className="text-muted small">
+                                {(file.size / 1024 / 1024).toFixed(2)} MB
+                              </div>
+                            </div>
+                            <Button
+                              variant="link"
+                              className="text-danger p-0"
+                              onClick={() => handleRemoveFile(index)}
+                            >
+                              <i className="bi bi-trash-fill fs-5"></i>
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
                 {activeTab === "autorisation" && (

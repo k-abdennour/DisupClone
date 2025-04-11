@@ -11,7 +11,13 @@ import {
   Col,
   Spinner,
 } from "react-bootstrap";
-import { BsSearch, BsThreeDotsVertical, BsUpload } from "react-icons/bs";
+import {
+  BsFileEarmarkText,
+  BsSearch,
+  BsThreeDotsVertical,
+  BsTrash,
+  BsUpload,
+} from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
 const AddArrivage: React.FC = () => {
@@ -22,6 +28,11 @@ const AddArrivage: React.FC = () => {
   const [typeDocument, setTypeDocument] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [typeDocumentNavire, setTypeDocumentNavire] = useState("");
+  const [documentsNomination, setDocumentsNomination] = useState<File[]>([]);
+  const [documentsQualification, setDocumentsQualification] = useState<File[]>(
+    []
+  );
+
   const [qualificationForm, setQualificationForm] = useState({
     date: "",
     conforme: false,
@@ -30,14 +41,28 @@ const AddArrivage: React.FC = () => {
   const [qualificationHistorique, setQualificationHistorique] = useState<any[]>(
     []
   );
+
   const [typePieceQualification, setTypePieceQualification] = useState("");
   const [surveillants, setSurveillants] = useState<any[]>([]);
   const [surveillantForm, setSurveillantForm] = useState({ pays: "", nom: "" });
-  const handleUploadClick = () => {
+  const handleUploadClick = (context: "nomination" | "qualification") => {
     if (fileInputRef.current) {
-      fileInputRef.current.click();
+      fileInputRef.current.onchange = (e: any) => {
+        const files = Array.from(e.target.files as File[]);
+        if (files.length) {
+          if (context === "nomination") {
+            setDocumentsNomination((prev) => [...prev, ...files]);
+          } else if (context === "qualification") {
+            setDocumentsQualification((prev) => [...prev, ...files]);
+          }
+        }
+        e.target.value = ""; // ✅ maintenant dans la portée
+      };
+
+      fileInputRef.current.click(); // ✅ toujours ici
     }
   };
+
   const paysOptions = ["Maroc", "France", "Espagne", "Italie"];
   const surveillantOptions = ["SGS Maroc", "Bureau Veritas", "Intertek"];
   const [commandes, setCommandes] = useState<
@@ -418,11 +443,55 @@ const AddArrivage: React.FC = () => {
                             borderColor: "#fc5421",
                           }}
                           className="w-100 d-flex align-items-center justify-content-center text-white"
-                          onClick={handleUploadClick}
+                          onClick={() => handleUploadClick("nomination")} // Pour le navire
                           disabled={typeDocumentNavire === ""}
                         >
                           <BsUpload className="me-2" /> Télécharger
                         </Button>
+
+                        {documentsNomination.length > 0 && (
+                          <div className="mt-4">
+                            <h6 className="mb-3 fw-semibold">
+                              Documents téléchargés
+                            </h6>
+                            <div className="bg-light border rounded p-3">
+                              {documentsNomination.map((file, index) => (
+                                <div
+                                  key={index}
+                                  className="d-flex align-items-center justify-content-between border rounded px-3 py-2 mb-2"
+                                  style={{ backgroundColor: "#f9fbfc" }}
+                                >
+                                  <div className="d-flex align-items-center gap-3">
+                                    <BsFileEarmarkText
+                                      size={24}
+                                      color="#fd7e14"
+                                    />
+                                    <div>
+                                      <div className="fw-semibold">Contrat</div>
+                                      <div className="text-muted small">
+                                        {file.name} (
+                                        {(file.size / 1024 / 1024).toFixed(2)}{" "}
+                                        MB)
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <BsTrash
+                                    color="#dc3545"
+                                    size={18}
+                                    role="button"
+                                    onClick={() =>
+                                      setDocumentsNomination((prev) =>
+                                        prev.filter((_, i) => i !== index)
+                                      )
+                                    }
+                                    className="ms-3"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
                         <Form.Control
                           type="file"
                           ref={fileInputRef}
@@ -579,12 +648,56 @@ const AddArrivage: React.FC = () => {
                       </Col>
                       <Col md={3} className="d-flex align-items-end">
                         <Button
-                          onClick={handleUploadClick}
+                          onClick={() => handleUploadClick("qualification")} // Pour la qualification
                           disabled={typePieceQualification === ""}
                           className="w-100 bg-primary text-white"
                         >
                           <BsUpload className="me-2" /> Upload
                         </Button>
+
+                        {documentsNomination.length > 0 && (
+                          <div className="mt-4">
+                            <h6 className="mb-3 fw-semibold">
+                              Documents téléchargés
+                            </h6>
+                            <div className="bg-light border rounded p-3">
+                              {documentsNomination.map((file, index) => (
+                                <div
+                                  key={index}
+                                  className="d-flex align-items-center justify-content-between border rounded px-3 py-2 mb-2"
+                                  style={{ backgroundColor: "#f9fbfc" }}
+                                >
+                                  <div className="d-flex align-items-center gap-3">
+                                    <BsFileEarmarkText
+                                      size={24}
+                                      color="#fd7e14"
+                                    />
+                                    <div>
+                                      <div className="fw-semibold">Contrat</div>
+                                      <div className="text-muted small">
+                                        {file.name} (
+                                        {(file.size / 1024 / 1024).toFixed(2)}{" "}
+                                        MB)
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <BsTrash
+                                    color="#dc3545"
+                                    size={18}
+                                    role="button"
+                                    onClick={() =>
+                                      setDocumentsNomination((prev) =>
+                                        prev.filter((_, i) => i !== index)
+                                      )
+                                    }
+                                    className="ms-3"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
                         <Form.Control
                           type="file"
                           ref={fileInputRef}
