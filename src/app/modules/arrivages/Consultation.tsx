@@ -122,7 +122,7 @@ const Consultation: React.FC = () => {
           <Card.Body>
             <Form>
               <Row className="mb-3">
-                <Col md={15}>
+                <Col md={10}>
                   <Form.Group>
                     <Form.Label>Description</Form.Label>
                     <Form.Control
@@ -132,6 +132,17 @@ const Consultation: React.FC = () => {
                       onChange={handleChange}
                     />
                   </Form.Group>
+                </Col>
+                <Col md={2} className="d-flex align-items-end">
+                  <Button
+                    style={{
+                      backgroundColor: "#35363B",
+                      borderColor: "#35363B",
+                    }}
+                    className="w-100 d-flex align-items-center justify-content-center text-white"
+                  >
+                    Enregistrer autant que version finale
+                  </Button>
                 </Col>
               </Row>
 
