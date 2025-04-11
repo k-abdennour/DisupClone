@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ArrivageSearchForm from "./__partials/ArrivageSearchForm";
 import ArrivageDataTable from "./__partials/ArrivageDataTable";
 import { useNavigate } from "react-router-dom";
+import { BsPlus } from "react-icons/bs";
 
 interface Arrivage {
   id: string;
@@ -145,7 +146,8 @@ const Arrivage: React.FC = () => {
           className="btn btn-primary btn-add-arrivage"
           onClick={handleAddArrivageClick}
         >
-          <span>➕</span> <span>Nouvel arrivage</span>
+          <BsPlus className="me-2" size={20} />
+          <span>Nouvel arrivage</span>
         </button>
       </div>
 
