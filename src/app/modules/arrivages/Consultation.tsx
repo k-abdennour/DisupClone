@@ -652,49 +652,6 @@ const Consultation: React.FC = () => {
                           <BsUpload className="me-2" /> Télécharger
                         </Button>
 
-                        {documentsNomination.length > 0 && (
-                          <div className="mt-4">
-                            <h6 className="mb-3 fw-semibold">
-                              Documents téléchargés
-                            </h6>
-                            <div className="bg-light border rounded p-3">
-                              {documentsNomination.map((file, index) => (
-                                <div
-                                  key={index}
-                                  className="d-flex align-items-center justify-content-between border rounded px-3 py-2 mb-2"
-                                  style={{ backgroundColor: "#f9fbfc" }}
-                                >
-                                  <div className="d-flex align-items-center gap-3">
-                                    <BsFileEarmarkText
-                                      size={24}
-                                      color="#fd7e14"
-                                    />
-                                    <div>
-                                      <div className="fw-semibold">Contrat</div>
-                                      <div className="text-muted small">
-                                        {file.name} (
-                                        {(file.size / 1024 / 1024).toFixed(2)}{" "}
-                                        MB)
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <BsTrash
-                                    color="#dc3545"
-                                    size={18}
-                                    role="button"
-                                    onClick={() =>
-                                      setDocumentsNomination((prev) =>
-                                        prev.filter((_, i) => i !== index)
-                                      )
-                                    }
-                                    className="ms-3"
-                                  />
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
                         <Form.Control
                           type="file"
                           ref={fileInputRef}
@@ -702,6 +659,47 @@ const Consultation: React.FC = () => {
                           style={{ display: "none" }}
                         />
                       </Col>
+                      {documentsNomination.length > 0 && (
+                        <div className="mt-4">
+                          <h6 className="mb-3 fw-semibold">
+                            Documents téléchargés
+                          </h6>
+                          <div className="bg-light border rounded p-3">
+                            {documentsNomination.map((file, index) => (
+                              <div
+                                key={index}
+                                className="d-flex align-items-center justify-content-between border rounded px-3 py-2 mb-2"
+                                style={{ backgroundColor: "#f9fbfc" }}
+                              >
+                                <div className="d-flex align-items-center gap-3">
+                                  <BsFileEarmarkText
+                                    size={24}
+                                    color="#fd7e14"
+                                  />
+                                  <div>
+                                    <div className="fw-semibold">Contrat</div>
+                                    <div className="text-muted small">
+                                      {file.name} (
+                                      {(file.size / 1024 / 1024).toFixed(2)} MB)
+                                    </div>
+                                  </div>
+                                </div>
+                                <BsTrash
+                                  color="#dc3545"
+                                  size={18}
+                                  role="button"
+                                  onClick={() =>
+                                    setDocumentsNomination((prev) =>
+                                      prev.filter((_, i) => i !== index)
+                                    )
+                                  }
+                                  className="ms-3"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </Row>
                   </div>
                 )}
@@ -790,6 +788,7 @@ const Consultation: React.FC = () => {
 
                 {activeTab === "informationsContrat" && (
                   <div className="space-y-6">
+                    {/* Dates et taux */}
                     <Row className="mb-3 mt-4">
                       <Col md={4}>
                         <Form.Group>
@@ -817,6 +816,7 @@ const Consultation: React.FC = () => {
                       </Col>
                     </Row>
 
+                    {/* Half Dispatch & Demurrage */}
                     <Row className="mb-3">
                       <Col md={2}>
                         <Form.Check
@@ -848,6 +848,7 @@ const Consultation: React.FC = () => {
                       </Col>
                     </Row>
 
+                    {/* Port de chargement */}
                     <Row className="mb-3">
                       <Col md={4}>
                         <Form.Group>
@@ -865,6 +866,7 @@ const Consultation: React.FC = () => {
                       </Col>
                     </Row>
 
+                    {/* Upload documents */}
                     <Row className="mb-3 align-items-end">
                       <Col md={10}>
                         <Form.Group>
@@ -908,41 +910,7 @@ const Consultation: React.FC = () => {
                           <i className="bi bi-upload me-2"></i> Télécharger
                         </Button>
 
-                        {uploadedDocuments.length > 0 && (
-                          <div className="mt-4">
-                            <h6 className="fw-bold mb-3">
-                              Documents téléchargés
-                            </h6>
-                            {uploadedDocuments.map(
-                              (file: File, index: number) => (
-                                <div
-                                  key={index}
-                                  className="d-flex align-items-center justify-content-between px-3 py-2 mb-2 rounded bg-light border"
-                                >
-                                  <div>
-                                    <div className="fw-bold">Contrat</div>
-                                    <div className="text-muted small">
-                                      {file.name} (
-                                      {(file.size / 1024 / 1024).toFixed(2)} MB)
-                                    </div>
-                                  </div>
-                                  <Button
-                                    variant="link"
-                                    className="text-danger p-0"
-                                    onClick={() =>
-                                      setUploadedDocuments((prev: File[]) =>
-                                        prev.filter((_, i) => i !== index)
-                                      )
-                                    }
-                                  >
-                                    <i className="bi bi-trash-fill fs-5"></i>
-                                  </Button>
-                                </div>
-                              )
-                            )}
-                          </div>
-                        )}
-
+                        {/* INPUT FILE CACHÉ */}
                         <Form.Control
                           type="file"
                           id="uploadDoc"
@@ -961,6 +929,49 @@ const Consultation: React.FC = () => {
                           }}
                         />
                       </Col>
+                      {/* 🧾 AFFICHAGE DES DOCUMENTS TÉLÉCHARGÉS */}
+                      {uploadedDocuments.length > 0 && (
+                        <div className="mt-4">
+                          <h6 className="fw-semibold mb-3">
+                            Documents téléchargés
+                          </h6>
+                          <div className="bg-light border rounded p-3">
+                            {uploadedDocuments.map(
+                              (file: File, index: number) => (
+                                <div
+                                  key={index}
+                                  className="d-flex align-items-center justify-content-between border rounded px-3 py-2 mb-2"
+                                  style={{ backgroundColor: "#f9fbfc" }}
+                                >
+                                  <div className="d-flex align-items-center gap-3">
+                                    <i className="bi bi-file-earmark-text-fill fs-4 text-warning" />
+                                    <div>
+                                      <div className="fw-semibold">
+                                        {formData.typeDocumentContrat ||
+                                          "Document"}
+                                      </div>
+                                      <div className="text-muted small">
+                                        {file.name} (
+                                        {(file.size / 1024 / 1024).toFixed(2)}{" "}
+                                        MB)
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <i
+                                    className="bi bi-trash-fill fs-5 text-danger"
+                                    role="button"
+                                    onClick={() =>
+                                      setUploadedDocuments((prev: File[]) =>
+                                        prev.filter((_, i) => i !== index)
+                                      )
+                                    }
+                                  />
+                                </div>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </Row>
                   </div>
                 )}

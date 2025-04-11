@@ -940,26 +940,36 @@ const Logistique: React.FC = () => {
                             <h6 className="fw-bold mb-3">
                               Documents téléchargés
                             </h6>
-                            {attachments.map((file, index) => (
-                              <div
-                                key={index}
-                                className="d-flex align-items-center justify-content-between px-3 py-2 mb-2 rounded bg-light border"
-                              >
-                                <div>
-                                  <div className="fw-bold">{file.name}</div>
-                                  <div className="text-muted small">
-                                    {(file.size / 1024 / 1024).toFixed(2)} MB
-                                  </div>
-                                </div>
-                                <Button
-                                  variant="link"
-                                  className="text-danger p-0"
-                                  onClick={() => handleRemoveFile(index)}
+                            <div className="bg-light border rounded p-3">
+                              {attachments.map((file, index) => (
+                                <div
+                                  key={index}
+                                  className="d-flex align-items-center justify-content-between border rounded px-3 py-2 mb-2"
+                                  style={{ backgroundColor: "#f9fbfc" }}
                                 >
-                                  <i className="bi bi-trash-fill fs-5"></i>
-                                </Button>
-                              </div>
-                            ))}
+                                  <div className="d-flex align-items-center gap-3">
+                                    <i className="bi bi-file-earmark-text-fill fs-4 text-warning" />
+                                    <div>
+                                      <div className="fw-semibold">
+                                        {documentTypesProcedure.find(
+                                          (d) => d.id === selectedDocumentType
+                                        )?.name || "Document"}
+                                      </div>
+                                      <div className="text-muted small">
+                                        {file.name} (
+                                        {(file.size / 1024 / 1024).toFixed(2)}{" "}
+                                        MB)
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <i
+                                    className="bi bi-trash-fill fs-5 text-danger"
+                                    role="button"
+                                    onClick={() => handleRemoveFile(index)}
+                                  />
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         )}
                       </div>
@@ -1200,26 +1210,33 @@ const Logistique: React.FC = () => {
                     {attachments.length > 0 && (
                       <div className="mt-4">
                         <h6 className="fw-bold mb-3">Documents téléchargés</h6>
-                        {attachments.map((file, index) => (
-                          <div
-                            key={index}
-                            className="d-flex align-items-center justify-content-between px-3 py-2 mb-2 rounded bg-light border"
-                          >
-                            <div>
-                              <div className="fw-bold">{file.name}</div>
-                              <div className="text-muted small">
-                                {(file.size / 1024 / 1024).toFixed(2)} MB
-                              </div>
-                            </div>
-                            <Button
-                              variant="link"
-                              className="text-danger p-0"
-                              onClick={() => handleRemoveFile(index)}
+                        <div className="bg-light border rounded p-3">
+                          {attachments.map((file, index) => (
+                            <div
+                              key={index}
+                              className="d-flex align-items-center justify-content-between border rounded px-3 py-2 mb-2"
+                              style={{ backgroundColor: "#f9fbfc" }}
                             >
-                              <i className="bi bi-trash-fill fs-5"></i>
-                            </Button>
-                          </div>
-                        ))}
+                              <div className="d-flex align-items-center gap-3">
+                                <i className="bi bi-file-earmark-text-fill fs-4 text-warning" />
+                                <div>
+                                  <div className="fw-semibold">
+                                    Rapport de qualification
+                                  </div>
+                                  <div className="text-muted small">
+                                    {file.name} (
+                                    {(file.size / 1024 / 1024).toFixed(2)} MB)
+                                  </div>
+                                </div>
+                              </div>
+                              <i
+                                className="bi bi-trash-fill fs-5 text-danger"
+                                role="button"
+                                onClick={() => handleRemoveFile(index)}
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
