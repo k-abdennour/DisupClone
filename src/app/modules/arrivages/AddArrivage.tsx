@@ -253,6 +253,28 @@ const AddArrivage: React.FC = () => {
               <Row className="mb-3">
                 <Col md={4}>
                   <Form.Group>
+                    <Form.Label>Date Booking</Form.Label>
+                    <Form.Control type="date" name="dateBooking" />
+                  </Form.Group>
+                </Col>
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>Date Fix Buyers</Form.Label>
+                    <Form.Control type="date" name="dateFixBuyers" />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>Date Réception Facture Proforma</Form.Label>
+                    <Form.Control type="date" name="dateReceptionFP" />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <Col md={4}>
+                  <Form.Group>
                     <Form.Label>Tolérance Tonnage</Form.Label>
                     <Form.Control
                       type="number"
@@ -261,22 +283,9 @@ const AddArrivage: React.FC = () => {
                     />
                   </Form.Group>
                 </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Date Booking</Form.Label>
-                    <Form.Control type="date" name="dateBooking" />
-                  </Form.Group>
-                </Col>
               </Row>
-
               {/* Ligne : Date Fix Buyers + Coût Financement */}
               <Row className="mb-3">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Date Fix Buyers</Form.Label>
-                    <Form.Control type="date" name="dateFixBuyers" />
-                  </Form.Group>
-                </Col>
                 <Col md={4}>
                   <Form.Group>
                     <Form.Label>Coût de Financement</Form.Label>
@@ -287,10 +296,6 @@ const AddArrivage: React.FC = () => {
                     />
                   </Form.Group>
                 </Col>
-              </Row>
-
-              {/* Ligne : Fret Prix Devise + Date Réception FP */}
-              <Row className="mb-3">
                 <Col md={4}>
                   <Form.Group>
                     <Form.Label>Fret (Prix en Devise)</Form.Label>
@@ -301,20 +306,20 @@ const AddArrivage: React.FC = () => {
                     />
                   </Form.Group>
                 </Col>
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Date Réception Facture Proforma</Form.Label>
-                    <Form.Control type="date" name="dateReceptionFP" />
-                  </Form.Group>
-                </Col>
               </Row>
 
-              {/* Ligne : Date Dépôt LC */}
+              {/* Ligne : Devise */}
               <Row className="mb-3">
                 <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>Date Dépôt LC à la Banque</Form.Label>
-                    <Form.Control type="date" name="dateDepotLC" />
+                  <Form.Group controlId="deviseSelect">
+                    <Form.Label>Devise</Form.Label>
+                    <Form.Select name="devise">
+                      <option value="">-- Sélectionner une devise --</option>
+                      <option value="MAD">MAD - Dirham marocain</option>
+                      <option value="EUR">EUR - Euro</option>
+                      <option value="USD">USD - Dollar américain</option>
+                      <option value="GBP">GBP - Livre sterling</option>
+                    </Form.Select>
                   </Form.Group>
                 </Col>
               </Row>

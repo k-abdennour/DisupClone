@@ -13,6 +13,10 @@ import Consultation from "../modules/arrivages/Consultation";
 import Paiement from "../modules/arrivages/Paiement ";
 import Logistique from "../modules/arrivages/Logistique";
 import Planning from "../modules/arrivages/Planning";
+import Shifts from "../modules/pont-bascule/gestion-des-shifts/GestionShifts";
+import GestionShifts from "../modules/pont-bascule/gestion-des-shifts/GestionShifts";
+import Pesage from "../modules/pont-bascule/pesage/Pesage";
+import Parametrage from "../modules/pont-bascule/parametrage/Parametrage";
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
@@ -183,6 +187,31 @@ const PrivateRoutes = () => {
           element={
             <SuspensedView>
               <Logistique />
+            </SuspensedView>
+          }
+        />
+
+        <Route
+          path="shifts"
+          element={
+            <SuspensedView>
+              <GestionShifts />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="pesage"
+          element={
+            <SuspensedView>
+              <Pesage />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path="parametrage"
+          element={
+            <SuspensedView>
+              <Parametrage />
             </SuspensedView>
           }
         />

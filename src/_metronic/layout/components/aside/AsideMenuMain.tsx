@@ -3,7 +3,6 @@ import { KTIcon } from "../../../helpers";
 import { AsideMenuItemWithSub } from "./AsideMenuItemWithSub";
 import { AsideMenuItem } from "./AsideMenuItem";
 
-
 interface AsideMenuMainProps {
   isCollapsed?: boolean;
 }
@@ -45,7 +44,7 @@ export function AsideMenuMain({ isCollapsed = false }: AsideMenuMainProps) {
       </AsideMenuItemWithSub>
       </AsideMenuItemWithSub> */}
 
-
+      {/* Gestion d'arrivage */}
       <AsideMenuItemWithSub
         to="#"
         icon="shield-tick"
@@ -68,7 +67,30 @@ export function AsideMenuMain({ isCollapsed = false }: AsideMenuMainProps) {
           isCollapsed={isCollapsed}
         />
       </AsideMenuItemWithSub>
+
+      {/* Pont à bascule  */}
+      <AsideMenuItemWithSub
+        to="#"
+        icon="shield-tick"
+        title="Pont à bascule "
+        isCollapsed={isCollapsed}
+      >
+        <AsideMenuItem
+          to="/shifts"
+          title="Gestion des shifts "
+          isCollapsed={isCollapsed}
+        />
+        <AsideMenuItem 
+          to="/pesage" 
+          title="Pesage" 
+          isCollapsed={isCollapsed} 
+        />
+        <AsideMenuItem
+          to="/parametrage"
+          title="Parametrage"
+          isCollapsed={isCollapsed}
+        />
+      </AsideMenuItemWithSub>
     </>
   );
 }
-

@@ -14,7 +14,7 @@ import { BsFileEarmarkText, BsTrash, BsUpload } from "react-icons/bs";
 const Consultation: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("nominationNavire");
+  const [activeTab, setActiveTab] = useState("details");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [typeDocumentNavire, setTypeDocumentNavire] = useState("");
   const [documentsNomination, setDocumentsNomination] = useState<File[]>([]);
@@ -261,13 +261,43 @@ const Consultation: React.FC = () => {
                 </Col>
               </Row>
 
-              {/* Accordéon React-Bootstrap */}
-              <Accordion className="mt-4">
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header>
-                    <h2>Plus de détails</h2>
-                  </Accordion.Header>
-                  <Accordion.Body>
+              {/* Onglets Logistique supplémentaires */}
+              <div className="flex flex-wrap space-x-2 border-bottom pb-2 mt-4">
+                {[
+                  { id: "details", label: "Plus de détails" },
+                  { id: "nominationNavire", label: "Nomination du navire" },
+                  {
+                    id: "nominationSurveillant",
+                    label: "Nomination du Surveillant",
+                  },
+                  {
+                    id: "qualificationArrivage",
+                    label: "Qualification au port de chargement",
+                  },
+                  {
+                    id: "informationsContrat",
+                    label: "Informations du contrat",
+                  },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`btn btn-sm me-2 ${
+                      activeTab === tab.id
+                        ? "btn-primary"
+                        : "btn-outline-secondary"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="border rounded p-4 mt-3">
+                {/* Onglet Plus de détails */}
+                {activeTab === "details" && (
+                  <div className="space-y-6">
                     <Row className="mb-3">
                       <Col md={4}>
                         <Form.Group>
@@ -305,7 +335,6 @@ const Consultation: React.FC = () => {
                         </Form.Group>
                       </Col>
                     </Row>
-
                     <Row className="mb-3">
                       <Col md={4}>
                         <Form.Group>
@@ -342,7 +371,6 @@ const Consultation: React.FC = () => {
                         </Form.Group>
                       </Col>
                     </Row>
-
                     <Row className="mb-3">
                       <Col md={4}>
                         <Form.Group>
@@ -367,7 +395,6 @@ const Consultation: React.FC = () => {
                         </Form.Group>
                       </Col>
                     </Row>
-
                     <Row className="mb-3">
                       <Col md={4}>
                         <Form.Group>
@@ -406,7 +433,6 @@ const Consultation: React.FC = () => {
                         </Form.Group>
                       </Col>
                     </Row>
-
                     <Row className="mb-3">
                       <Col md={4}>
                         <Form.Group>
@@ -445,7 +471,6 @@ const Consultation: React.FC = () => {
                         </Form.Group>
                       </Col>
                     </Row>
-
                     <Row className="mb-3">
                       <Col md={4}>
                         <Form.Group>
@@ -482,7 +507,6 @@ const Consultation: React.FC = () => {
                         </Form.Group>
                       </Col>
                     </Row>
-
                     <Row className="mb-3">
                       <Col md={12}>
                         <Form.Group>
@@ -513,43 +537,9 @@ const Consultation: React.FC = () => {
                         </Form.Group>
                       </Col>
                     </Row>
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
+                  </div>
+                )}
 
-              {/* Onglets Logistique supplémentaires */}
-              <div className="flex flex-wrap space-x-2 border-bottom pb-2 mt-4">
-                {[
-                  { id: "nominationNavire", label: "Nomination du navire" },
-                  {
-                    id: "nominationSurveillant",
-                    label: "Nomination du Surveillant",
-                  },
-                  {
-                    id: "qualificationArrivage",
-                    label: "Qualification au port de chargement",
-                  },
-                  {
-                    id: "informationsContrat",
-                    label: "Informations du contrat",
-                  },
-                ].map((tab) => (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`btn btn-sm me-2 ${
-                      activeTab === tab.id
-                        ? "btn-primary"
-                        : "btn-outline-secondary"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-
-              <div className="border rounded p-4 mt-3">
                 {/* Onglet : Informations du contrat */}
 
                 {activeTab === "nominationNavire" && (
